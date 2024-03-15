@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="77px" height="66px" viewBox="0 0 77 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 6</title>
+    <g id="01产品开发-产品（V1.0.1+V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="测试服务（V1.0.2)" transform="translate(-602.000000, -459.000000)" fill="#E9EAEE" fill-rule="nonzero">
+            <g id="内容" transform="translate(275.000000, 80.000000)">
+                <g id="编组-6" transform="translate(339.000000, 380.000000)">
+                    <path d="M41,9 C42.6568542,9 44,10.3431458 44,12 C44,13.5976809 42.75108,14.9036609 41.1762728,14.9949073 L41,15 L3.99937302,14.9994671 L4,52 C4,53.5976809 2.75108004,54.9036609 1.17627279,54.9949073 L1,55 C-0.597680883,55 -1.90366088,53.75108 -1.99490731,52.1762728 L-2,52 L-2,14 C-2,11.3112453 0.122306709,9.11818189 2.78311038,9.00461951 L3,9 L41,9 Z" id="路径" transform="translate(21.000000, 32.000000) scale(-1, 1) rotate(-45.000000) translate(-21.000000, -32.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

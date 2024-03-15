@@ -1,0 +1,20 @@
+export default {
+'user.register.phone.placeholder':"输入邮箱或中国手机号码",
+'user.register.phone.valid':"请填写手机号/邮箱",
+'user.register.phone.correct':"请填写正确手机号/邮箱",
+'user.register.get-verification-code': '获取验证码',
+'user.register.verification-code.label':"输入验证码",
+'user.register.verification-code.valid':"请输入验证码",
+'user.register.verification-code-correct.valid':"请输入正确验证码",
+'user.register.password.placeholder': '至少8位密码，含英文字母大小写和数字',
+'user.register.password.valid': '请设置您的登录密码',
+'user.register.password-again.placeholder': "再次输入密码",
+'user.register.password-again.valid': "两次输入密码不一致",
+'user.register.password.label':"设置登录密码",
+'user.register.password-again.label': "再次输入登录密码",
+'user.register.agree':'我已阅读并同意',
+'user.register.verificationCode.sending':'验证码发送中..',
+'user.forget.password.title':'重置密码',
+'user.forget.password.reset.succeed':'重置成功',
+'user.register.toDashboard':'立刻前往主页'
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>删除</title>
+    <g id="07营销（V1.0.3)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="APP用户反馈-详情（V1.0.3)" transform="translate(-501.000000, -785.000000)">
+            <g id="内容" transform="translate(274.000000, 80.000000)">
+                <g id="左侧内容" transform="translate(20.000000, 97.000000)">
+                    <g id="编组-2" transform="translate(83.000000, 608.000000)">
+                        <g id="删除" transform="translate(124.000000, 0.000000)">
+                            <path d="M0,8.00019444 C0,3.58165423 3.58174129,0 8,0 C12.4182587,0 16,3.58165423 16,8.00019444 C16,12.4183458 12.4182587,16 8,16 C3.58174129,16 0,12.4183458 0,8.00019444 Z M5,7 L11,7 C11.5522847,7 12,7.44771525 12,8 C12,8.55228475 11.5522847,9 11,9 L5,9 C4.44771525,9 4,8.55228475 4,8 C4,7.44771525 4.44771525,7 5,7 Z" id="Fill-1" fill="#FF4444"></path>
+                            <rect id="矩形" fill="#FFFFFF" x="4" y="7" width="8" height="2" rx="1"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

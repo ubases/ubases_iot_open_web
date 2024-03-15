@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>失败    icon</title>
+    <g id="05APP开发（V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="构建&amp;测试-完成" transform="translate(-315.000000, -402.000000)">
+            <g id="内容" transform="translate(275.000000, 80.000000)">
+                <g id="编组-8" transform="translate(20.000000, 221.000000)">
+                    <g id="1" transform="translate(0.000000, 72.000000)">
+                        <g id="失败----icon" transform="translate(20.000000, 29.000000)">
+                            <polygon id="Clip-2" points="0 0 35.9999121 0 35.9999121 36 0 36"></polygon>
+                            <path d="M0,18 C0,27.9413086 8.05869141,36 18,36 C27.9413086,36 36,27.9413086 36,18 C36,8.05869141 27.9413086,0 18,0 C8.05869141,0 0,8.05869141 0,18 Z" id="路径" fill="#FF8E35"></path>
+                            <g id="编组-5" transform="translate(16.499960, 5.999985)" fill="#FFFFFF">
+                                <path d="M3,17.9999561 C3,18.6213428 2.74276674,19.4999524 1.5,19.4999524 C0.257225935,19.4999524 0,18.6213428 0,17.9999561 C0,14.7083105 0,12.2083167 0,10.4999744 C0,8.52081665 0,5.5208252 0,1.5 C0,0.878609619 0.257225935,0 1.5,0 C2.74276674,0 3,0.878609619 3,1.5 C3,5.5208252 3,8.52081665 3,10.4999744 C3,12.2083167 3,14.7083105 3,17.9999561 Z" id="路径"></path>
+                                <circle id="椭圆形" cx="1.49999634" cy="22.4999451" r="1.49999634"></circle>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

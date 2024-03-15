@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>完成</title>
+    <defs>
+        <polygon id="path-1" points="0 0 80 0 80 80 0 80"></polygon>
+    </defs>
+    <g id="05APP开发（V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="上架管理2" transform="translate(-808.000000, -341.000000)">
+            <g id="内容" transform="translate(275.000000, 80.000000)">
+                <g id="完成" transform="translate(533.000000, 261.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Clip-2"></g>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="40.8333333" cy="39.1666667" r="29.1666667"></circle>
+                    <path d="M66.3752,27.604 L36.2608,57.718 C35.5256,58.4536 34.5636,58.8192 33.6,58.8192 C32.636,58.8192 31.6704,58.4536 30.9368,57.718 L13.6228,40.402 C12.152,38.9316 12.152,36.5488 13.6228,35.08 C15.0932,33.6076 17.476,33.6076 18.9464,35.08 L33.6,49.7332 L61.0512,22.28 C62.5216,20.8096 64.9044,20.8096 66.3752,22.28 C67.8456,23.7504 67.8456,26.1336 66.3752,27.604 M40.0016,0 C17.9064,0 0,17.9068 0,40.002 C0,62.0916 17.9064,80 40.0016,80 C62.0912,80 80,62.0916 80,40.002 C80,17.9068 62.0912,0 40.0016,0" id="Fill-1" fill="#38CB52"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

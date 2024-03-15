@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>默认头像</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#6DB3FF" offset="0%"></stop>
+            <stop stop-color="#3B7CFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="04授权管理" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="权限设置-默认角色" transform="translate(-1388.000000, -15.000000)">
+            <g id="默认头像" transform="translate(1388.000000, 15.000000)">
+                <circle id="椭圆形" fill="#F4F8FE" cx="15" cy="15" r="15"></circle>
+                <path d="M15,17.6785714 C20.0069771,17.6785714 24.284708,20.800846 25.9924015,25.2046042 L25.9113295,25.292914 C23.1763803,28.1911328 19.2994319,30 15,30 C10.7005681,30 6.82361974,28.1911328 4.0886705,25.292914 L4.00759849,25.2046042 C5.71529204,20.800846 9.99302287,17.6785714 15,17.6785714 Z M15.0327476,4.9921507 C18.281107,4.9921507 20.9256047,7.63664844 20.9256047,10.8850078 C20.9256047,14.1333673 18.281107,16.777865 15.0327476,16.777865 C11.7843882,16.777865 9.13989046,14.1333673 9.13989046,10.8850078 C9.13989046,7.63664844 11.7843882,4.9921507 15.0327476,4.9921507 Z" id="形状" fill="url(#linearGradient-1)" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,20 @@
+export default {
+  "createOemApp.title": "创建App",
+  "createOemApp.immediately.create": "立即创建",
+  "createOemApp.warning.text": "您正在创建OEM App",
+  "createOemApp.label.name": "应用名称",
+  "createOemApp.placeholder.name": "请输入应用名称，建议6个字以内",
+  "createOemApp.remind.name": "应用名称请注意长度，中文名称不建议超过6个字，英文不超过12个字母。此名称会展示在手机桌面上",
+  "createOemApp.label.iosName": "iOS应用包名",
+  "createOemApp.remind.iosName": '上架到应用市场的唯一标识，仅支持输入字母、数字，用"".""进行分段，至少2段，每段以字母开头。',
+  "createOemApp.label.androidName": "Android应用包名",
+  "createOemApp.remind.androidName": '上架到应用市场的唯一标识，仅支持输入字母、数字、下划线，用"".""进行分段，至少2段，每段以字母开头。',
+  "createOemApp.label.channelName": "渠道名称",
+  "createOemApp.remind.channelName": "申请第三方登录以及云云对接的时候会用到哦。",
+  "createOemApp.label.region": "App可使用的国家和地区",
+  "createOemApp.remind.region": "注意：一旦选定国家和地区，创建成功后，不可修改",
+  "createOemApp.rules.name": "请输入应用名称",
+  "createOemApp.rules.iosName": "请按规则输入iOS应用包名",
+  "createOemApp.rules.androidName": "请按规则输入Android应用包名",
+  "createOemApp.rules.region": "请选择可使用的国家和地区"
+}

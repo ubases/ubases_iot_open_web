@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 5</title>
+    <g id="05APP开发（V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="界面配置-APP底部操作栏（添加自定义菜单）" transform="translate(-579.000000, -622.000000)" fill="#3B7CFF">
+            <g id="弹窗备份-3" transform="translate(380.000000, 422.000000)">
+                <g id="编组-3备份" transform="translate(88.500000, 183.000000)">
+                    <g id="产品图" transform="translate(83.500000, 0.000000)">
+                        <g id="编组-5" transform="translate(27.000000, 17.000000)">
+                            <rect id="矩形" x="12" y="0" width="1" height="25" rx="0.5"></rect>
+                            <rect id="矩形" transform="translate(12.500000, 11.500000) rotate(-90.000000) translate(-12.500000, -11.500000) " x="12" y="-1" width="1" height="25" rx="0.5"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

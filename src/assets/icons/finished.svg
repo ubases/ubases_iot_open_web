@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>完成</title>
+    <defs>
+        <polygon id="path-1" points="0 0 18 0 18 18 0 18"></polygon>
+    </defs>
+    <g id="01产品开发" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="确定产品开发完成" transform="translate(-415.000000, -334.000000)">
+            <g id="弹窗备份-3" transform="translate(380.000000, 76.000000)">
+                <g id="表格" transform="translate(19.000000, 236.000000)">
+                    <g id="完成" transform="translate(16.000000, 22.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Clip-2"></g>
+                        <path d="M14.93442,6.2109 L8.15868,12.98655 C7.99326,13.15206 7.77681,13.23432 7.56,13.23432 C7.3431,13.23432 7.12584,13.15206 6.96078,12.98655 L3.06513,9.09045 C2.7342,8.75961 2.7342,8.22348 3.06513,7.893 C3.39597,7.56171 3.9321,7.56171 4.26294,7.893 L7.56,11.18997 L13.73652,5.013 C14.06736,4.68216 14.60349,4.68216 14.93442,5.013 C15.26526,5.34384 15.26526,5.88006 14.93442,6.2109 M9.00036,0 C4.02894,0 0,4.02903 0,9.00045 C0,13.97061 4.02894,18 9.00036,18 C13.97052,18 18,13.97061 18,9.00045 C18,4.02903 13.97052,0 9.00036,0" id="Fill-1" fill="#3B7CFF" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

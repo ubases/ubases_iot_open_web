@@ -1,0 +1,156 @@
+// 文本溢出部分省略号样式处理
+.textOverflow() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+
+/* 多行文本溢出部分省略号样式处理
+ * @line 文本显示行数
+ * @bg 文本域背景颜色
+ */
+.textOverflowMulti(@line: 3, @bg: #fff) {
+  position: relative;
+  max-height: @line * 1.5em;
+  margin-right: -1em;
+  padding-right: 1em;
+  overflow: hidden;
+  line-height: 1.5em;
+  text-align: justify;
+  &::before {
+    position: absolute;
+    right: 14px;
+    bottom: 0;
+    padding: 0 1px;
+    background: @bg;
+    content: '...';
+  }
+  &::after {
+    position: absolute;
+    right: 14px;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
+    content: '';
+  }
+}
+
+.textOverflowMulti2(@line: 3) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: @line;
+  overflow: hidden;
+}
+
+// 清除浮动
+.clearfix() {
+  zoom: 1;
+  &::before,
+  &::after {
+    display: table;
+    content: ' ';
+  }
+  &::after {
+    clear: both;
+    height: 0;
+    font-size: 0;
+    visibility: hidden;
+  }
+}
+
+/* css绘制三角形
+ * @width 三角形边宽 
+ * @height 三角形边宽 等边三角形@width与@height相等
+ * @deg 旋转角度，顺时针(45deg,135deg,225deg)
+ * @color 颜色
+ */
+.triangle(@width: 40px, @height: 40px, @deg: 45deg, @color: @primary-color){
+  width: @width;
+  height: @height;
+  background: linear-gradient(@deg, transparent, transparent 50%, @color 50%, @color 100%);
+}
+
+/* css绘制对号（√）
+ * @margin 通过间距调整位置
+ * @width 勾的第一笔画长度 
+ * @height 勾的第二笔画长度
+ * @deg 旋转角度，顺时针
+ * @border-width 勾的粗细
+ * @color 颜色
+ */
+.right-icon(@margin: 9px, @width: 7px, @height: 14px, @deg:45deg, @border-width:2px, @color:#fff) {
+  display: inline-block;
+  margin: 0 @margin;
+  width: @width;
+  height: @height;
+  transform: rotate(@deg);
+  border-width: 0 @border-width @border-width 0;
+  border-style: solid;
+  border-color: @color;
+}
+
+/* 卡片单选框
+ */
+.radio-card() {
+  position: relative;
+  border: 1px solid @aithings-border-color;
+  border-radius: 2px;
+  cursor: pointer;
+  &.active{
+    border-color: @primary-color;
+    &::after{
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      .triangle(40px,40px,45deg,@primary-color)
+    }
+    &::before{
+      content: "";
+      position: absolute;
+      top: 4px;
+      right: -3px;
+      z-index: 99;
+      .right-icon()
+    }
+  }
+}
+
+// 表单样式
+.ant-form() {
+  // 输入框边框颜色和字体颜色
+  /deep/.ant-input,/deep/.ant-select-selection,/deep/.ant-input-number,/deep/.ant-cascader-input,/deep/.ant-time-picker-input{
+    border-color: @aithings-border-color;
+    color: @aithings-text-color-black;
+  }
+  /deep/.ant-input::placeholder,
+  /deep/.ant-select-selection__placeholder,
+  /deep/.ant-select-arrow,
+  /deep/.ant-calendar-range-picker-input::placeholder,
+  /deep/.ant-input-number-input::placeholder,
+  /deep/.ant-cascader-picker-arrow,
+  /deep/.ant-time-picker-input::placeholder{
+    color: @aithings-text-tips-color;
+  }
+  /deep/.ant-radio-inner{
+    border-color: #8392A7;
+  }
+  /deep/.ant-radio-group{
+    color:@aithings-text-color-black;
+  }
+  /deep/ .ant-form-item label{
+    color: @aithings-text-color-gray;
+  }
+  /deep/ .ant-form-item-label{
+    padding-right: 12px;
+  }
+  /deep/ .ant-form-item-children{
+    color: @aithings-text-color-black;
+  }
+  /deep/.ant-form-item{
+    margin-bottom: 14px;
+  }
+}

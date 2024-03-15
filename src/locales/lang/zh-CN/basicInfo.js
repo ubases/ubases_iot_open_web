@@ -1,0 +1,17 @@
+export default {
+  "basicInfo.title":"基本信息",
+  "basicInfo.userName.label":"登录账号",
+  "basicInfo.isRealName.label":"实名认证",
+  "basicInfo.accountType.label":"账号类型",
+  "basicInfo.area.label":"国家/地区",
+  "basicInfo.companyName.label":"所在企业",
+  "basicInfo.phone.label":"联系电话",
+  "basicInfo.email.label":"联系邮箱",
+  "basicInfo.address.label":"联系地址",
+  "basicInfo.phone.rules":"手机号不符合规则",
+  "basicInfo.email.rules":"邮箱不符合规则",
+  "basicInfo.title":" ",
+  "basicInfo.title":" ",
+  "basicInfo.title":" ",
+  "basicInfo.title":" ",
+};

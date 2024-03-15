@@ -1,0 +1,114 @@
+@import "../../../../../global.less";
+.config-content{
+  height: 100%;
+  overflow-y: auto;
+}
+.config-wrap{
+  padding: 21px 20px 20px;
+  flex:1;
+}
+.config-title{
+  padding-bottom: 13px;
+  font-size: 15px;
+  line-height: 21px;
+}
+.config-tips{
+  color: @aithings-text-color-gray;
+  line-height: 20px;
+}
+.preview-wrap{
+  width: 350px;
+  min-height: 100%;
+  padding: 21px 20px 20px;
+  background: @aithings-table-thread-color;
+  border-left: 1px solid @aithings-border-color;
+  .preview-phone-wrap{
+    margin: 0 auto;
+  }
+  .phone-bg{
+    width: 100%;
+    height: 100%;
+  }
+
+  // ios
+  .iphone-xs-max-shell,.IPhoneXS-shell{
+    width: 178px;
+    height: 373px;
+    padding: 6px 6px 6px 5px;
+    background: #1C1C1C url("../../../../../assets/image/iphoneXS_max_shell.svg");
+    border-radius: 14px;
+    .phone-bg{
+      overflow: hidden;
+      border-radius: 7px;
+      
+    }
+  }
+  .IPhone4-shell{
+    width: 160px;
+    height: 280px;
+    padding: 30px 8px 37px;
+    background: url("../../../../../assets/image/iphone4_shell.svg");
+    border-radius: 14px;
+  }
+  .IPhone5_6-shell{
+    width: 160px;
+    height: 320px;
+    padding: 29px 7px 33px;
+    background: url("../../../../../assets/image/iphone5_6_shell.svg");
+    border-radius: 14px;
+  }
+
+  // 安卓
+  .Android16_9-shell{
+    width: 160px;
+    height: 317px;
+    padding: 29px 9px 35px;
+    background: url("../../../../../assets/image/Android16_9_shell.svg");
+    border-radius: 14px;
+  }
+  .Android18_9-shell{
+    width: 160px;
+    height: 349px;
+    padding: 29px 9px 35px;
+    background: url("../../../../../assets/image/Android18_9_shell.svg");
+    border-radius: 14px;
+  }
+  .Android20_9-shell{
+    width: 160px;
+    height: 381px;
+    padding: 29px 9px 35px;
+    background: url("../../../../../assets/image/Android20_9_shell.svg");
+    border-radius: 14px;
+  }
+  .phone-radio-group{
+    padding-bottom: 16px;
+    text-align: center;
+    /deep/.ant-radio-button-wrapper{
+      border-color:  @aithings-text-color-gray;
+      &:hover{
+        color: @primary-color;
+      }
+    }
+    /deep/.ant-radio-button-wrapper-checked{
+      border-color: @primary-color;
+      color: @primary-color;
+    }
+    /deep/.ant-radio-group{
+      margin: 0 auto;
+      font-size: 12px;
+    }
+    /deep/.ant-radio-button-wrapper:not(:first-child)::before{
+      background-color: @aithings-text-color-gray;
+    }
+    /deep/.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before{
+      background-color: @primary-color;
+    }
+  }
+  .tips{
+    text-align: center;
+    padding-top: 10px;
+  }
+  .size-tips{
+    padding-top: 13px;
+  }
+}

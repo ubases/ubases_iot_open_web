@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>设备</title>
+    <g id="03数据管理（V1.0.1+V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="数据管理-概览V1.0.2" transform="translate(-315.000000, -241.000000)">
+            <g id="内容" transform="translate(275.000000, 80.000000)">
+                <g id="编组-2" transform="translate(20.000000, 95.000000)">
+                    <g id="1" transform="translate(0.000000, 40.000000)">
+                        <g id="设备" transform="translate(20.000000, 26.000000)">
+                            <path d="M40,9 C41.1045695,9 42,9.8954305 42,11 L42,37 C42,38.1045695 41.1045695,39 40,39 L8,39 C6.8954305,39 6,38.1045695 6,37 L6,11 C6,9.8954305 6.8954305,9 8,9 L40,9 Z M40,11 L8,11 L8,37 L40,37 L40,11 Z" id="矩形" fill="#343A40" fill-rule="nonzero"></path>
+                            <rect id="矩形" fill="#3B7CFF" x="29.952381" y="18.952381" width="9" height="2" rx="1"></rect>
+                            <rect id="矩形备份" fill="#3B7CFF" x="29.952381" y="33.952381" width="9" height="2" rx="1"></rect>
+                            <polygon id="直线-2" fill="#343A40" fill-rule="nonzero" points="42 23 42 25 6 25 6 23"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

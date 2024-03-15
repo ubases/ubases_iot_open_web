@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon</title>
+    <g id="00主页（V1.0.2)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" transform="translate(-28.000000, -211.000000)" fill="#343A40" fill-rule="nonzero">
+            <g id="菜单栏" transform="translate(0.000000, 60.000000)">
+                <g id="1备份" transform="translate(0.000000, 140.000000)">
+                    <g id="icon" transform="translate(28.000000, 11.000000)">
+                        <path d="M18,0 C19.1045695,0 20,0.8954305 20,2 L20,22 C20,23.1045695 19.1045695,24 18,24 L8,24 C6.8954305,24 6,23.1045695 6,22 L6,2 C6,0.8954305 6.8954305,0 8,0 L18,0 Z M18,1 L8,1 C7.48716416,1 7.06449284,1.38604019 7.00672773,1.88337887 L7,2 L7,22 C7,22.5128358 7.38604019,22.9355072 7.88337887,22.9932723 L8,23 L18,23 C18.5128358,23 18.9355072,22.6139598 18.9932723,22.1166211 L19,22 L19,2 C19,1.48716416 18.6139598,1.06449284 18.1166211,1.00672773 L18,1 Z" id="矩形"></path>
+                        <polygon id="直线" points="15 2 15 3 11 3 11 2"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
