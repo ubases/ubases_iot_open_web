@@ -1,4 +1,36 @@
-#iot-platform-web
+### 前端开发接入流程介绍（WEB端）
+
+爱星物联WEB端前端项目技术栈基于Ant Design Pro of vue、 ES2015+、Vue.Js、Vuex、Vue-Router、g2 和 antd-vue，提前了解和学习这些知识会非常有帮助。
+
+#### 1. 环境准备
+ - Node.js安装及环境配置。 [Node.js官网](https://nodejs.org/zh-cn/)
+ - Git 安装。[git官网](https://git-scm.com/)
+
+#### 2. 编辑器准备
+ - 前端编辑器。推荐Visual Studio Code [vscode官网](https://code.visualstudio.com/)
+
+#### 3. 安装
+从 GitHub 仓库中直接安装最新的代码
+```
+$ git clone 项目地址
+$ cd 项目名
+```
+
+#### 4. 本地开发
+ - 安装依赖。
+```
+$ npm install
+```
+如果网络状况不佳，可以使用 cnpm 进行加速，并使用 cnpm 代替 npm
+
+ - 启动项目。
+```
+$ npm run serve
+```
+启动完成后，打开浏览器访问 http://localhost:8000，即可看到本地项目的页面。 
+
+
+#### 5. 项目目录结构简介
 
 ```
 iot-open-web
@@ -41,6 +73,8 @@ iot-open-web
 │     ├─ appDevelop                   # APP开发模块
 │     ├─ authority                    # 权限模块
 │     ├─ dashboard                    # 主页
+│     ├─ dataManage                   # 数据管理模块 
+│     ├─ doc                          # 文档模块  
 │     ├─ exception                    # 其他
 │     ├─ marketing                    # 营销模块
 │     ├─ product                      # 产品开发模块
