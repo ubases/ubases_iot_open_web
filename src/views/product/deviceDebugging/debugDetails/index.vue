@@ -205,7 +205,7 @@ export default ({
     // 收到消息
     sendMsgContent(topic,msg){
       const content = {
-        time: moment().format('YYYY-MM-DD hh:mm:ss'),
+        time: moment().format('YYYY-MM-DD HH:mm:ss'),
         topic,
         msg
       }
