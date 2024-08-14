@@ -3,7 +3,6 @@
     <a-layout-header class="layout-header">
       <div class="logo tap-pointer" >
         <span @click="backIndex">
-          <!-- <logo-white-icon style="transform: translateY(10px); margin-right: 17px;"></logo-white-icon> -->
           <img src="../assets/logo_white.png" class="logo-img"/>
           <span>{{$t('system.title')}}</span>
           <version/>
@@ -53,7 +52,7 @@
           </div>
         </div>
       </a-layout-sider>
-      <a-layout-content v-if="$route.path !== '/dashboard/index'" class="layout-content" >
+      <a-layout-content v-if="$route.path !== '/dashboard/index'" class="layout-content margin20" >
         <router-view />
       </a-layout-content>
       <a-layout-content v-if="$route.path === '/dashboard/index'">
@@ -66,14 +65,12 @@
 <script>
 import { mapState } from "vuex";
 import RightContent from "@/components/GlobalHeader/RightContent";
-import { LogoWhiteIcon } from '@/core/icons'
 import { isMobile } from "@/utils/util"
 import Version from "@/components/GlobalHeader/Version.vue";
 
 export default {
   name: "BasicLayout",
   components: {
-    LogoWhiteIcon,
     RightContent,
     Version
   },

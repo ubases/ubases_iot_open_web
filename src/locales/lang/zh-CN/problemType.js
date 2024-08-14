@@ -1,5 +1,5 @@
 export default {
-  'problemType.tips':'OEM APP上用户反馈时，可选择的问题分类，您可以根据需求自定义类型，方便整理用户反馈。',
+  'problemType.tips':'OEM App上用户反馈时，可选择的问题分类，您可以根据需求自定义类型，方便整理用户反馈。',
   'problemType.title':'问题分类管理',
   'problemType.button.add':'添加分类',
   'problemType.column.classify': '问题分类',

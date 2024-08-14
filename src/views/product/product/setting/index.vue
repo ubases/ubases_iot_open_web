@@ -76,7 +76,6 @@ import BasicConfig from "./basicConfig/index.vue"
 import FinishSumit from "../components/FinishSumit.vue"
 import EditProduct from "../components/EditProduct.vue"
 import TestService from "./testService/index.vue"
-import VoiceControl from "./voiceControl/index.vue"
 import { DevelopFinishIcon } from '@/core/icons'
 import { getProductDetails, returnDevelop } from '@/api/product'
 let tab = 0
@@ -91,7 +90,6 @@ export default{
     EditProduct,
     TestService,
     DevelopFinishIcon,
-    VoiceControl
   },
   data (){
     return {
@@ -115,10 +113,6 @@ export default{
         {
           label: this.$t('setting.tab.BasicConfig'),
           components:"BasicConfig"
-        },
-        {
-          label: this.$t('setting.voiceControl'),
-          components:"VoiceControl"
         },
         {
           label: this.$t('setting.tab.TestService'),

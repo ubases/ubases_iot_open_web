@@ -2,7 +2,7 @@
   <section class="page-wrap no-padding">
     <a-page-header :title="$t('user.analysis.title')" >
       <!-- 详情 -->
-      <app-change  v-show="!noData" :detailList="['version']" @dataChange="appChange" @isData="isData"/>
+      <app-change  v-show="!noData" :detailList="['version','appKey']" @dataChange="appChange" @isData="isData"/>
       
       <section v-if="!noData" class="content">
         <a-row :gutter="20">
@@ -18,6 +18,7 @@
         <section class="chart-block">
           <div class="flex x-space-between">
             <h4>{{$t('user.analysis.count.active')}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('active',$t('user.analysis.count.active'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="activeTooltip" class="tooltip"></div>
@@ -27,6 +28,7 @@
         <section>
           <div class="flex x-space-between">
             <h4>{{$t('user.analysis.count.register')}} {{registerTotal}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('register',$t('user.analysis.count.register'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="registerTooltip" class="tooltip"></div>
@@ -134,7 +136,7 @@ export default {
       const tooltip = document.getElementById("registerTooltip")
       // 鼠标进入辅助线
       this.registerChart.on('tooltip:show', ev => {
-        tooltip.innerHTML = `${moment(ev.data.items[0].title).format('M')}`+$t('public.month')+` ${ev.data.items[0].value}`
+        tooltip.innerHTML = `${moment(ev.data.items[0].title).format('M')}`+this.$t('public.month')+` ${ev.data.items[0].value}`
         tooltip.style.left = `${ev.data.items[0].x+7}px`
         tooltip.style.display = 'block'
       });
@@ -295,6 +297,16 @@ export default {
 
       this.hierarchyChart.interaction('element-single-selected');
       this.hierarchyChart.render();
+    },
+    handleDownload(type,name){
+      this.$DownloadTemplate(
+        this,
+        {
+          url: `/v1/platform/web/data/open/overview/appUser/export?appKey=${this.appKey}&dataType=${type}`,
+        },
+        name +".xlsx",
+        "get"
+      );
     }
   },
   beforeDestroy(){
@@ -311,6 +323,9 @@ export default {
 
 .content{
   padding: 25px 20px 20px;
+  .export-text{
+    color: @primary-color;
+  }
   .chart-block{
     padding-top: 30px;
   }

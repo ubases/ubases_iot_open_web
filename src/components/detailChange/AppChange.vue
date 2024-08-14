@@ -35,7 +35,7 @@
             </div>
           </section>
           <section class="flex y-axis-center app-details">
-            <span>App ID: {{ item.appKey }}</span>
+            <span>App Key: {{ item.appKey }}</span>
             <span style="margin-left:40px">{{$t('appChange.app.version')}}：{{ item.version }}</span>
           </section>
         </a-select-option>
@@ -50,9 +50,8 @@ import { getAppList, getAppDetail } from "@/api/appExploit";
 export default {
   props:{
     status:{ type:Number, default: 0},
-    detailList:{ type: Array, default: ()=>['iosPkgName','androidPkgName','channel']},
+    detailList:{ type: Array, default: ()=>['iosPkgName','androidPkgName','channel','appKey']},
     param:{type:Object, default:()=>{}}
-
   },
   components: {
     ExchangeIcon,
@@ -68,7 +67,7 @@ export default {
         androidPkgName: this.$t('appChange.detailOrigin.androidPkgName'),
         channel: this.$t('appChange.detailOrigin.channel'),
         version: this.$t('appChange.detailOrigin.version'),
-        appKey: 'APP key'
+        appKey: 'App key'
       }
     }
   },
@@ -91,7 +90,7 @@ export default {
       if(id) this.getAppDetail(id)
     },
 
-    // APP详情
+    // App详情
     async getAppDetail(id) {
       const res = await getAppDetail({ appId: id })
       if (res.code !== 0) return

@@ -74,6 +74,7 @@ export default {
   "public.export_title": "导出数据",
   "public.remark": "备注",
   "public.createdTime": "创建时间",
+  "public.updateTime": "更新时间",
   "public.man": "男",
   "public.woman": "女",
   "public.secrecy": "保密",
@@ -154,5 +155,9 @@ export default {
   "public.arbitrary.value":"任意值",
   "public.preview":"预览",
   "public.please.select":"请选择",
-  "public.please.input":"请输入"
+  "public.please.input":"请输入",
+  "public.skip":"跳过",
+  "public.finish":"完成",
+  "public.clear":"清空",
+  "public.check.doc":"查看帮助文档"
 };

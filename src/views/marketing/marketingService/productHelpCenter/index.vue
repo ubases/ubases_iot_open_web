@@ -164,25 +164,17 @@ export default {
     };
   },
   created() {
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.getProductClassifyList()
-      this.queryList()
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'queryParam', query.queryParam)
+        this.$set(this,'productTypeCascader', query.productTypeCascader)
+      }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/marketing/marketingService/productHelpCenter/docManage/index' || from.path === '/dashboard/index'
-    next()
+    this.getProductClassifyList()
+    this.queryList()
   },
 
-  activated () {
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.queryList()
-    }
-  },
   methods: {
 
     // 获取产品分类列表
@@ -193,15 +185,19 @@ export default {
       this.productTypeOptions = res.data?.list?.map(item =>{
         return {
           ...item,
-          children: item.children
+          children: item.children?.map( products=>{
+            return {
+              ...products,
+            }
+          }) || []
         } 
-      })
+      }) || []
       this.productTypeList = flatArr(this.productTypeOptions, 'children')
     },
 
     // 产品类型切换
     cascaderChange(value){
-      this.queryParam.query.productTypeId = value[value.length - 1] ?? ''
+        this.queryParam.query.productTypeId = value[value.length - 1] ?? ''
     },
     
     // 获取列表
@@ -262,6 +258,15 @@ export default {
       return this.productTypeList.filter(item => item.id === id)?.pop()?.name || ''
     }
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/marketing/marketingService/productHelpCenter/docManage/index'
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam, productTypeCascader:this.productTypeCascader}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

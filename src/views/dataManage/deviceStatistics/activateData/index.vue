@@ -1,7 +1,7 @@
 <template>
   <section class="page-wrap no-padding" @click="showSearch=false">
     <a-page-header :title="$t('device.statistics.title')" >
-      <product-change v-show="!noData" :detailList="['productTypeName','networkTypeDesc']" @dataChange="productChange" @isData="isData"/>
+      <product-change v-show="!noData" :detailList="['productKey','productTypeName','networkTypeDesc']" @dataChange="productChange" @isData="isData"/>
       <section v-if="!noData" class="content">
         <a-row :gutter="20">
           <a-col :xs="24" :md="8" v-for="item in totalList" :key="item.key">
@@ -16,6 +16,7 @@
         <section class="chart-block">
           <div class="flex x-space-between">
             <h4>{{$t('device.statistics.active.title')}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('last30days',$t('device.statistics.active.title'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="activeTooltip" class="tooltip"></div>
@@ -25,6 +26,7 @@
         <section>
           <div class="flex x-space-between">
             <h4>{{$t('device.statistics.count.title')}} {{countTotal}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('last12months',$t('device.statistics.count.title'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="countTooltip" class="tooltip"></div>
@@ -98,7 +100,7 @@ export default {
       }
     },
 
-    // 累计注册激活用户
+    // 累计激活设备
     initcountChart(){
       this.countChart = new Chart({
         container: 'countChart',
@@ -139,7 +141,7 @@ export default {
       this.countChart.render();
     },
 
-    // 近30天的活跃用户
+    // 近30天的激活设备
     initActiveChart(){
       this.activeChart = new Chart({
         container: 'activeChart',
@@ -211,6 +213,18 @@ export default {
           }
         },
       })
+    },
+
+    
+    handleDownload(type,name){
+      this.$DownloadTemplate(
+        this,
+        {
+          url: `/v1/platform/web/data/open/overview/deviceActive/export?productKey=${this.productKey}&dataType=${type}`,
+        },
+        name +".xlsx",
+        "get"
+      );
     }
   },
   beforeDestroy(){
@@ -226,6 +240,9 @@ export default {
 }
 .content{
   padding: 25px 20px 20px;
+  .export-text{
+    color: @primary-color;
+  }
   .chart-wrap{
     padding: 43px 20px 43px 10px;
     position: relative;

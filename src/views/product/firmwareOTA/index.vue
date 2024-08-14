@@ -94,6 +94,10 @@
                   {{$t("public.record")}}
                 </a-button>
                 <a-divider type="vertical" />
+                <a-button type="link" size="small" :disabled="!item.url" @click="handleDownload(item)">
+                  {{$t("public.download")}}
+                </a-button>
+                <a-divider type="vertical" />
                 <a-button type="link" size="small" :disabled="item.status !== 1" @click="handleEdit(item,'edit')">
                   {{ $t("public.edit") }}
                 </a-button>
@@ -167,7 +171,7 @@ export default {
           scopedSlots: { customRender: 'firmwareName' }
         },
         {
-          dataIndex: "id",
+          dataIndex: "firmwareKey",
           title: this.$t("firmware.key"),
         },
         {
@@ -192,7 +196,7 @@ export default {
           title: this.$t("public.action"),
           key: "action",
           align: "center",
-          width: "360px",
+          width: "440px",
           scopedSlots: { customRender: "action" },
         },
       ],
@@ -209,24 +213,15 @@ export default {
     };
   },
   created() {
-    this.defaultProductId = this.$route.params.productId
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'defaultProductId', query.defaultProductId)
+        this.$set(this,'queryParam', query.queryParam)
+      }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/product/firmwareOTA/record/index' || from.path === '/dashboard/index'
-    next()
   },
 
-  activated () {
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.queryList()
-    }
-  },
   methods: {
     // 产品切换
     productChange(data){
@@ -334,7 +329,23 @@ export default {
         this.queryList()
       })
     },
+
+    handleDownload(data){
+      if(data.url){
+        this.$DownloadTemplate( this, {url: data.url}, `${data.firmwareName}.bin`, "get");
+      }
+    }
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/product/firmwareOTA/record/index' 
+    next()
+  },
+
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam, defaultProductId:this.productDetails.id}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

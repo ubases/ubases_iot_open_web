@@ -4,7 +4,6 @@
       <div class="top">
         <div class="header">
           <a href="javascript:;" class="">
-            <!-- <logo-icon></logo-icon> -->
             <img src="../assets/logo.png" class="logo-img"/>
             <span class="title">
               {{$t('system.title')}}
@@ -16,7 +15,7 @@
       <div class="page-wrap">
         <route-view></route-view>
       </div>
-      <div class="footer" style="background: none; heigjt:20px font-size: 1.3em; font-family: '微软雅黑'; color:#70757D;">
+      <div class="footer" style="background: none; height:20px; font-size: 1.3em; font-family: '微软雅黑'; color:#70757D;">
         Copyright @2021 深圳市安信可科技有限公司 <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" class="AQ footer-link">粤ICP备13001817号-2</a>
       </div>
     </div>
@@ -25,13 +24,12 @@
 
 <script>
 import RouteView from "./RouteView";
-import { LogoIcon} from '@/core/icons'
 import SelectLang from "@/components/SelectLang";
 import Version from "@/components/GlobalHeader/Version.vue";
 
 export default {
   name: "UserLayout",
-  components: { RouteView, SelectLang, LogoIcon, Version },
+  components: { RouteView, SelectLang, Version },
   data() {
     return {};
   },

@@ -32,7 +32,7 @@ export default {
   "create.product.module":"模组",
   "create.product.step.title": "完善产品信息",
   "create.product.label.name": "产品名称",
-  "create.product.placeholder.name": "品牌/产品名称，将在APP上显示，尽量精简",
+  "create.product.placeholder.name": "品牌/产品名称，将在App上显示，尽量精简",
   "create.product.label.model": "产品型号",
   "create.product.label.imageUrl": "产品图片",
   "create.product.image.tips": "格式要求：JPEG,bmp,JPG,PNG格式，不能超过1M，尺寸不限制，图片比例1:1。",
@@ -46,6 +46,9 @@ export default {
   "create.product.warning.imgType": "请上传格式为JPEG,bmp,JPG,PNG的图片",
   "create.product.warning.imgSize": "上传图片最大1M",
   "create.product.warning.percent": "请上传1:1比例的图片",
-  "create.product.warning.success": "图片上传成功"
-
+  "create.product.warning.success": "图片上传成功",
+  "product.link.app":"关联应用",
+  "product.link.app.all":"一键关联所有应用",
+  "product.link.app.detail":"当前产品会出现在关联App的待配网列表中，设备面板也会自动关联。",
+  "product.link.app.placeholder":"请选择关联应用"
 };

@@ -315,6 +315,12 @@ export default {
   color:@primary-color;
   cursor: pointer;
 }
+/* 笔记本-高度小于1080 */
+@media (max-height: 800px) { 
+  .container{
+    height: 500px;
+  }
+}
 /* 移动端（平板，小于等于 1200px） */
 @media (max-width: 1200px) { 
   .container{

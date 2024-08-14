@@ -7,10 +7,12 @@
         {{ $t('setting.panels.update.tips') }}
         <span class="update-btn" @click="selectPanel(panelSelected || {})">{{ $t('setting.panels.update.now') }}</span>  
       </div>
-      <!-- <div class="tips" v-if="panelSelected.id && details.isUpgradeTsl == 1">
+      <div class="tips" v-if="panelSelected.appPanelType != 1 && panelSelected.id && details.isUpgradeTsl == 1">
         {{ $t('setting.panels.function.update.tips') }}
-        <span class="update-btn" @click="handleEditPanel">{{ $t('setting.panels.to.edit') }}</span>  
-      </div> -->
+        <span v-if="panelSelected.appPanelType!==3" class="update-btn" @click="handleEditPanel(panelSelected.appPanelType)">{{ $t('setting.panels.to.edit') }}</span>  
+        <span v-if="panelSelected.appPanelType==3" class="update-btn" @click="handleEditPanel(panelSelected.appPanelType)">{{ $t('setting.panels.to.update') }}</span> 
+        <span v-if="panelSelected.appPanelType==3" class="update-btn" @click="handleCancelRemind">{{ $t('setting.panels.cancel.remind') }}</span> 
+      </div>
     </section>
     <section v-if="panelSelected.id" class="flex y-axis-center">
       <section class="panel-wrap active">
@@ -44,7 +46,7 @@
 </template>
 
 <script>
-import { getPanelList, selectPanel } from "@/api/product"
+import { getPanelList, selectPanel, cancelReminderPanel } from "@/api/product"
 import SelectPanel from"../../components/SelectPanel.vue"
 export default ({
   name:"Panels",
@@ -138,7 +140,19 @@ export default ({
     },
 
     // 前往编辑自定义控制面板
-    handleEditPanel(){
+    handleEditPanel(type){
+    if(type == 3){
+      //线下面板
+      this.$router.push({path:'/panel/offlinePanel/detail/index', query: {id:this.panelSelected.id,type:'edit'}})
+    } 
+      
+    },
+
+    // 取消提醒
+    async handleCancelRemind(){
+      const res = await cancelReminderPanel({ productId:this.productId, controlPanelId:this.panelSelected.id })
+      if(res.code !== 0) return
+      this.$emit('refreshDetails')
     }
   }
 })

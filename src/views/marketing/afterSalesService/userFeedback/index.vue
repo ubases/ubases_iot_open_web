@@ -14,6 +14,7 @@
                   :options="appOptions"
                   :allowClear="true"
                   @keyup.enter.native="query"
+                  @change="appQueryChange"
                 />
               </a-form-item>
             </a-col>
@@ -22,7 +23,7 @@
                 <a-select
                   v-model="queryParam.query.typeId"
                   :placeholder="$t('after.sales.service.placeholder.typeId')"
-                  :options="$DictList('feedback_question_type')"
+                  :options="problemTypeOptions"
                   :allowClear="true"
                   @keyup.enter.native="query"
                 />
@@ -103,6 +104,8 @@
 import { getAppList } from '@/api/appExploit'
 import { getProductList} from "@/api/product"
 import { getFeedbackList} from "@/api/userFeedback"
+import {getProblemTypeList } from "@/api/problemType"
+import { computed } from 'vue';
 
 export default {
   name: "UserFeedback",
@@ -159,30 +162,33 @@ export default {
       loading: false,
       addVisiable:false,
       appOptions:[],
-      productOptions:[]
+      productOptions:[],
+      problemTypeList:[]
     };
   },
-  created() {
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.queryList()
-      this.getAppList()
-      this.getProductList()
+  computed:{
+    problemTypeOptions(){
+      if(this.queryParam.query.appKey){
+        const appId = this.appOptions.filter(item=>item.value == this.queryParam.query.appKey)?.pop()?.id || ''
+        return this.problemTypeList.filter(item=>item.appId == appId)
+      } else {
+        return []
+      }
     }
   },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/marketing/afterSalesService/userFeedback/details/index' || from.path === '/dashboard/index'
-    next()
+  created() {
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'queryParam', query.queryParam)
+      }
+    }
+    this.queryList()
+    this.getAppList()
+    this.getProductList()
+    this.getProblemTypeList()
   },
 
-  activated () {
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.queryList()
-    }
-  },
   methods: {
     onChangePagination(e) {
       this.pagination.current = e.current
@@ -217,6 +223,10 @@ export default {
       this.$router.push({path:"/marketing/afterSalesService/userFeedback/details/index",query:{id : item.id}})
     },
 
+    appQueryChange(){
+      delete this.queryParam.query.typeId
+    },
+
     // 获取全部应用
     async getAppList(){
       const res = await getAppList()
@@ -224,7 +234,8 @@ export default {
       this.appOptions = res.data?.list?.map(item=>{
         return{
           label: item.name,
-          value: item.appKey
+          value: item.appKey,
+          id: item.id
         }
       })
     },
@@ -240,7 +251,28 @@ export default {
         }
       })
     },
+    // 获取问题类型列表
+    async getProblemTypeList(){
+      const res = await getProblemTypeList({appId: this.appId})
+      if(res.code !== 0) return
+      this.problemTypeList = res.data?.map(item=>{
+        return {
+          value: item.id,
+          label: item.name,
+          appId: item.appId
+        }
+      }) || []
+    },
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/marketing/afterSalesService/userFeedback/details/index'
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

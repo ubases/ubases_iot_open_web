@@ -14,6 +14,8 @@ const getters = {
   securityTime: (state) => state.user.securityTime,
   addRouters: (state) => state.permission.addRouters,
   multiTab: (state) => state.app.multiTab,
+  isShowDemo: (state) => state.user.isShowDemo,
+  demoProductId: (state) => state.user.demoProductId,
 };
 
 export default getters;

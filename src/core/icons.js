@@ -9,14 +9,10 @@
  */
 
 //公共图标
-// import AddIcon from '@/assets/icons/add.svg?inline' 
-// import EditIcon from '@/assets/icons/edit.svg?inline' 
 import DeleteIcon from '@/assets/icons/delete.svg?inline'
-// import CopyIcon from '@/assets/icons/copy.svg?inline' 
 import UploadIcon from '@/assets/icons/upload.svg?inline'
 import UploadBlueIcon from '@/assets/icons/upload_blue.svg?inline'
 import DateIcon from '@/assets/icons/date.svg?inline'
-import ExportIcon from '@/assets/icons/export.svg?inline'
 import WarningIcon from '@/assets/icons/warning.svg?inline' 
 import ExchangeIcon from '@/assets/icons/exchange.svg?inline' 
 import ArrowDownIcon from '@/assets/icons/arrow_down.svg?inline' 
@@ -41,7 +37,6 @@ import FinishedIcon from '@/assets/icons/finished.svg?inline'
 
 
 // 登录页图标
-import LogoIcon from '@/assets/icons/logo.svg?inline'
 import LogoWhiteIcon from '@/assets/icons/logo_white.svg?inline'
 import OpenEyesIcon from '@/assets/icons/open_eyes.svg?inline'
 import CloseEyesIcon from '@/assets/icons/close_eyes.svg?inline'
@@ -50,7 +45,7 @@ import PasswordIcon from '@/assets/icons/password.svg?inline'
 import AccountIcon from '@/assets/icons/account.svg?inline'
 import FinishLargeIcon from '@/assets/icons/finish_large.svg?inline'
 
-// OEM APP图标
+// OEM App图标
 import WarningLargeIcon from '@/assets/icons/warning_large.svg?inline'
 import PlusIcon from '@/assets/icons/plus.svg?inline'
 import InfoIcon from '@/assets/icons/info.svg?inline'
@@ -80,14 +75,12 @@ export {
   UploadBlueIcon,
   DevelopFinishIcon,
   DeleteIcon,
-  LogoIcon,
   AccountIcon,
   PasswordIcon,
   OpenEyesIcon,
   CloseEyesIcon,
   FinishLargeIcon,
   DateIcon,
-  ExportIcon,
   ExchangeIcon,
   ArrowDownIcon,
   LogoWhiteIcon,

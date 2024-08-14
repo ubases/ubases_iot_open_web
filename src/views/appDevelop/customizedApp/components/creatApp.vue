@@ -29,6 +29,10 @@
           <a-input v-model="form.channelName" :maxLength="50"/>
           <div class="remind">{{$t('createOemApp.remind.channelName')}}</div>
         </a-form-model-item>
+        <a-form-model-item ref="iosTeamId" :label="$t('createOemApp.label.teamId')" prop="iosTeamId">
+          <a-input v-model="form.iosTeamId" :maxLength="50"/>
+          <div class="remind">{{$t('createOemApp.remind.teamId')}}</div>
+        </a-form-model-item>
         <a-form-model-item :label="$t('customizedApp.createAPP.label.appIcon')" prop="appIconUrl">
           <upload-button 
             accept="image/png"

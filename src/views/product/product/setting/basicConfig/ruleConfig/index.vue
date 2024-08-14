@@ -156,7 +156,7 @@ export default ({
           const data = this.funcDataSource[t.dpId]
           let value = t.value
           if(t.operate != 5){
-            if(data.dataType == 'ENUM' || data.dataType == 'BOOL'){
+            if(data.dataType == 'ENUM'|| data.dataType == 'FAULT' || data.dataType == 'BOOL'){
               value = data.dataSpecsList.filter(f=>f.value == value)?.pop()?.label || ''
             } 
           } else {
@@ -169,7 +169,7 @@ export default ({
           const data = this.funcDataSource[t.dpId]
           let value = ''
           if(t.operate == 1){
-            if(data.dataType == 'ENUM' || data.dataType == 'BOOL'){
+            if(data.dataType == 'ENUM'|| data.dataType == 'FAULT' || data.dataType == 'BOOL'){
               value = data.dataSpecsList.filter(f=>f.value == t.value)?.pop()?.label || ''
             } else {
               value = t.value
@@ -207,6 +207,7 @@ export default ({
         return{
           value:item.dpId,
           label:item.name,
+          rwFlag:item.rwFlag
         }
       }) || []
     },

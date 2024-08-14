@@ -1,6 +1,6 @@
 <template>
   <section class="page-wrap no-padding limit-height">
-    <a-page-header :title="`${deviceId}`+$t('debugDetails.title')" @back="back">
+    <a-page-header :title="`${deviceId}`+$t('debugDetails.title')"  @back="$router.back()">
       <icon-font slot="backIcon" type="icon-back_arrow" :style="{ fontSize: '24px' }"/>
       <div class="debug-content">
         <section class="content-left">
@@ -10,7 +10,7 @@
             <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :colon="false">
               <a-form-model-item :label="item.name" v-for="item in functionList" :key="item.id">
                 <a-select 
-                  v-if="item.dataType == 'ENUM'" 
+                  v-if="item.dataType == 'ENUM' || item.dataType == 'FAULT'" 
                   v-model="form[item.dpid]" 
                   :options="item.options"
                   :allowClear="true"
@@ -64,15 +64,29 @@
         <section class="content-right" style="border-left:1px solid #DAE6F8">
           <div class="news-title">
             <h3>{{$t('debugDetails.msg.record')}}</h3>
-            <div class="clear tap-pointer" @click="clearRecord">{{$t('debugDetails.msg.clear')}}</div>
+            <div class="flex x-space-between search">
+              <div class="flex y-axis-center ">
+                <a-input
+                  class="search-input"
+                  v-model="searchKey"
+                  :placeholder="$t('debugDetails.searchKey.placeholder')"
+                  :allowClear="true"
+                  @keyup.enter.native="query"
+                />
+                <a-button type="primary" @click="query">{{$t("public.query")}}</a-button>
+                <a-button  class="regular-button" @click="reset">{{$t("public.reset")}}</a-button>
+              </div>
+              <div class="clear tap-pointer" @click="clearRecord">{{$t('debugDetails.msg.clear.record')}}</div>
+            </div>
+           
           </div>
-          <div ref="msgContent" class="news-content">
-            <div class="msg-item" v-for="(item,index) in msgRecordList" :key="index">
+          <div ref="msgContent" class="news-content" @scroll="handleScroll"> 
+            <div class="msg-item" v-for="(item,index) in filterMsgRecord" :key="index">
               <div class="header flex y-axis-center x-space-between">
                 <div>{{item.time}}</div>
                 <div>{{item.topic}}</div>
               </div>
-              <div class="content">{{item.msg}}</div>
+              <div class="content">{{item.msgStr}}</div>
             </div>
           </div>
         </section>
@@ -83,9 +97,10 @@
 
 <script>
 import { getFuncList } from "@/api/product"
-import Control from "@/utils/control"
 import moment from "moment";
 import { mapGetters } from "vuex"
+import { randomString,isNull } from "@/utils/util"
+
 
 export default ({
   name:"debugDetails",
@@ -105,12 +120,23 @@ export default ({
       isOnline: 0, // 是否上线 0 未上线， 1 上线
       type:0,  // 1 真实设备， 2 虚拟设备
       multipleDpids:{}, //有倍数的dpid
+      searchKey:'',
+      searchKeyFilter:'',
+      isNeedScroll:true
     }
   },
   computed: {
     ...mapGetters(["userInfo"]),
     preparation(){
       return this.type == 2 && this.isOnline == 0
+    },
+    filterMsgRecord(){
+      const key = this.searchKeyFilter.trim()
+      if(isNull(key)){
+        return this.msgRecordList
+      } else {
+        return this.msgRecordList.filter(item=>item.topic.includes(key) || item.msgStr.includes(key))
+      }
     }
   },
   mounted (){
@@ -129,7 +155,7 @@ export default ({
       this.controlInit()
       const list = res.data?.list || []
       this.functionList = list.map(item => {
-        if((item.dataType == 'ENUM'||item.dataType == 'FAULT') &&  item.dataSpecsList){
+        if((item.dataType == 'ENUM' || item.dataType == 'FAULT') &&  item.dataSpecsList){
           item.options = JSON.parse(item.dataSpecsList).map(item => {
             return {
               value: item.value,
@@ -172,11 +198,18 @@ export default ({
       Object.keys(this.form).forEach((item)=>{
         if(this.multipleDpids.hasOwnProperty(item)){
           data[item]= data[item]*this.multipleDpids[item]
-        } else if(typeof(data[item]) == 'string'){
-          data[item]= data[item].replace(/"/g,'\\\"')
         }
       })
       Control.setProps({...data})
+    },
+
+    // 消息检索
+    query(){
+      this.searchKeyFilter = this.searchKey
+    },
+    reset(){
+      this.searchKeyFilter = ''
+      this.searchKey = ''
     },
 
     // 清空所有指令
@@ -190,33 +223,24 @@ export default ({
       this.form = {...this.form}
     },
 
-    // 发送消息回调
-    // sendMsgContentCallBack(msg){
-    //   const content = {
-    //     time: moment().format('YYYY-MM-DD hh:mm:ss'),
-    //     topic: `${this.productKey}/${this.deviceId}/control`,
-    //     msg
-    //   }
-    //   this.msgRecordList.push(content)
-    //   this.updateMsgView()
-      
-    // },
-
     // 收到消息
     sendMsgContent(topic,msg){
       const content = {
         time: moment().format('YYYY-MM-DD HH:mm:ss'),
         topic,
-        msg
+        msg,
+        msgStr:JSON.stringify(msg)
       }
       this.msgRecordList.push(content)
-      this.updateMsgView()
+      if(this.isNeedScroll){
+        this.updateMsgView()
+      }
     },
 
     // 初始化mqtt
     controlInit(){
       const param = {mqttServer:this.mqttServer, productKey:this.productKey, deviceId:this.deviceId}
-      const options = {username: this.userInfo?.userName || '',password: this.userInfo?.userName || ''}
+      const options = {username: this.userInfo?.userName || '',password: this.userInfo?.userName || '',clientId: "webdbg_" + randomString(32)}
       Control.init(param,options)
       // 获取属性回调
       Control.registerQueryPropCallBack = this.registerPropCallBack;
@@ -261,12 +285,6 @@ export default ({
       this.msgRecordList = []
     },
 
-    // 消息记录框滚到底部
-    updateMsgView(){
-      this.$nextTick(function() {
-        this.$refs.msgContent.scrollTop=this.$refs.msgContent.scrollHeight
-      });
-    },
     // 布尔值变化
     handleChange(e,key){
       if(e){
@@ -281,11 +299,22 @@ export default ({
         this.$set(this.form, key, undefined)
       }
     },
+    // 消息记录框滚到底部
+    updateMsgView(){
+      this.$nextTick(function() {
+        this.$refs.msgContent.scrollTop=this.$refs.msgContent.scrollHeight
+      });
+    },
 
-    // 返回上一页
-    back(){
-      this.$router.push({ name:"deviceDebugging",params:{ productId: this.productId }})
+    // 默认滚动，用户往上滚动后则不滚动，置底后继续滚动
+    handleScroll(e){
+      if(this.$refs.msgContent.scrollTop!==this.$refs.msgContent.scrollHeight-this.$refs.msgContent.offsetHeight){
+        this.isNeedScroll = false
+      } else{
+        this.isNeedScroll = true
+      }
     }
+
   },
 
   beforeDestroy(){
@@ -405,13 +434,11 @@ export default ({
     flex: 1;
     height: 100%;
     .news-title{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       padding:0 20px;
-      .clear{
+    }
+    .clear{
         text-align: center;
-        width: 90px;
+        width: 100px;
         height: 34px;
         font-size: 14px;
         font-weight: 400;
@@ -420,9 +447,22 @@ export default ({
         border-radius: 4px;
         border: 1px solid @primary-color;
       }
-    }
+      .search-input{
+        width: 220px;
+        display: block;
+        margin-right: 10px;
+        /deep/.ant-input{
+          width: 220px;
+        }
+      }
+      .search{
+        padding-top: 10px;
+        button+button{
+          margin-left: 10px;
+        }
+      }
     .news-content{
-      height: calc(100% - 58px);
+      height: calc(100% - 90px);
       overflow-y:auto;
       min-width: 200px;
       width: 100%;

@@ -12,7 +12,9 @@
                 :is="tab.components" 
                 :appId="appId"
                 :appKey="appKey"
+                :appData="appData"
                 :version="version"
+                @updateAppData ="updateAppData"
                 />
             </a-tab-pane>
           </a-tabs>
@@ -26,7 +28,6 @@
 </template>
 <script>
 import AppChange from '@/components/detailChange/AppChange.vue'
-import VoiceService from './components/VoiceService.vue'
 import ThirdPartyService from './components/ThirdPartyService.vue'
 import NoData from "@/components/NoData/index.vue"
 import AutoUpgrade from "./components/AutoUpgrade.vue"
@@ -36,7 +37,6 @@ export default {
   components: {
     AppChange,
     NoData,
-    VoiceService,
     ThirdPartyService,
     AutoUpgrade
   },
@@ -45,8 +45,8 @@ export default {
       appId:"",
       appKey:"",
       version:'',
+      appData:{},
       tabsList:[
-        { label: this.$t('optionalConfig.tab.label.VoiceService'), components:"VoiceService"},
         { label: this.$t('optionalConfig.tab.label.ThirdPartyService'), components:"ThirdPartyService" },
         { label: this.$t('optionalConfig.tab.label.autoUpgrade'), components:"AutoUpgrade" },
       ],
@@ -61,12 +61,19 @@ export default {
       this.appId = data.appId
       this.appKey = data.appKey
       this.version = data.version
+      this.appData = {...data}
+    },
+
+    // 更新详情
+    updateAppData(){
+      this.$refs.appChange.getAppDetail(this.appId)
     },
 
     // 是否有产品
     isData(value){
       this.noData = !value
-    }
+    },
+
   },
 };
 </script>

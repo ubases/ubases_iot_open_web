@@ -1,6 +1,3 @@
-// eslint-disable-next-line
-import * as loginService from "@/api/login";
-// eslint-disable-next-line
 import { BasicLayout, BlankLayout, PageView, RouteView,AccountLayout, TopNavLayout } from "@/layouts";
 import { MenuProductIcon, MenuDataIcon, MenuAppIcon, MenuCloudIcon, MenuAccreditIcon  } from '@/core/icons'
 import { staticRouterConfig } from "@/config/router.config"
@@ -89,7 +86,7 @@ export const generator = (routerMap, parent) => {
         title: title,
         icon: icon,
         permission: item.name,
-        keepalive: isCache == 1 ? true : false, // 是否缓存
+        keepalive: false, // 是否缓存
         isBack: false,
         parent: parent 
       },

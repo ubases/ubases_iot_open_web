@@ -3,6 +3,7 @@ import { login, getInfo, getUserRouters, updateToken, logout, chooseCompany } fr
 import { ACCESS_TOKEN, REFRESH_TOKEN, EXPIRES_AT, } from "@/store/mutation-types";
 import { setAvoidLogin } from '@/utils/avoidLogin'
 
+
 const user = {
   state: {
     token: "",
@@ -15,6 +16,8 @@ const user = {
     tenantList:[],
     defaultSpace: {},
     securityTime: storage.get("securityTime") || 1 * 60 * 60,
+    isShowDemo:false,
+    demoProductId:'',
   },
 
   mutations: {
@@ -45,6 +48,12 @@ const user = {
     SET_SECURITY_TIME: (state, securityTime) => {
       state.securityTime = securityTime;
       storage.set("securityTime", securityTime);
+    },
+    SET_SHOW_DEMO:(state, isShowDemo) => {
+      state.isShowDemo = isShowDemo;
+    },
+    SET_DEMO_PRODUCT_ID:(state, id) => {
+      state.demoProductId = id;
     },
   },
 
@@ -109,6 +118,7 @@ const user = {
           commit("SET_TENANT_LIST", result.tenantList || []); // 登录租户列表
           const defaultSpace = {tenantId:result.tenantId||'', companyName:result.companyName||result.tenantList.filter(item=>item.tenantId == result.tenantId).pop().companyName}
           commit("SET_DEFAULT_SPACE", defaultSpace);  // 默认租户空间
+          // commit("SET_SHOW_DEMO",result.hasOwnProperty('hasGuided') && !result.hasGuided)
           resolve(res);
         } else{
           reject(new Error("获取用户信息失败"));
@@ -187,7 +197,6 @@ const user = {
           });
       });
     },
-
   },
 };
 

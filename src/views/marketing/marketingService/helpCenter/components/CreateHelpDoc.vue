@@ -43,7 +43,7 @@
             <a-button type="primary" :loading="confirmLoading" @click="handleOk">
               {{$t('public.sumit')}}
             </a-button>
-            <a-button @click="handleDelete">
+            <a-button v-if="docId" @click="handleDelete">
               {{$t('public.delete')}}
             </a-button>
             <a-button @click="handleCancel">

@@ -583,3 +583,23 @@ export function checkIfArrayIntervalOverLap(area) {
  
   return result
 }
+
+/* 获取页面缓存的参数
+* @param route 路由
+* @returns {}   
+*/
+export function getPageQuery(route){
+  const pageQuery = Storage.get('pageQuery')
+  if(pageQuery[route.name]){
+    return pageQuery[route.name]
+  }
+  return null
+}
+
+/* 判断是否数组
+* @param variable
+* @returns Boolean  
+*/
+export function isArray(variable) {
+  return Array.isArray(variable);
+}

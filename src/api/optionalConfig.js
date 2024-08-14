@@ -114,3 +114,14 @@ export function getVoice(params) {
     data,
   });
 }
+
+/**
+ * APP更新团队ID
+ */
+export function editTeamId(data) {
+  return request({
+    url: "/v1/platform/web/open/oem/app/editTeamId",
+    method: "post",
+    data,
+  });
+}

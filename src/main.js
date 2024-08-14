@@ -13,7 +13,9 @@ import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 import global from '../src/utils/global'
 import { Button, Switch, Image as VanImage,Slider,Stepper, Progress, Checkbox, CheckboxGroup, Calendar, Picker, Icon } from 'vant';
-
+import Storage from '@/utils/session';
+import { getPageQuery } from '@/utils/util'
+import Control from "@/utils/control"
 
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
@@ -55,6 +57,9 @@ Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
+window.Storage = Storage
+window.getPageQuery = getPageQuery
+window.Control = Control
 
 new Vue({
   i18n,

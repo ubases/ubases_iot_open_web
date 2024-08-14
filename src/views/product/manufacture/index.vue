@@ -29,9 +29,9 @@
             <a-col :md="3" :sm="24">
               <a-form-item>
                 <a-select  
-                  v-model="queryParam.query.exportCount"  
+                  v-model="queryParam.query.isQueryExport"  
                   :placeholder="$t('manufacture.placeholder.exportTimes')"  
-                  :options="$DictList('device_export_count')"
+                  :options="$DictList('export_status').filter(item=>item.value!=0)"
                   :allowClear="true"
                   @keyup.enter.native="query"
                 />
@@ -197,7 +197,7 @@ export default {
           title: this.$t("public.action"),
           key: "action",
           align: "left",
-          width: "220px",
+          width: "100px",
           scopedSlots: { customRender: "action" },
         },
       ],

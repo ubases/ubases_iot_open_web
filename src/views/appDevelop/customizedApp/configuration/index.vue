@@ -24,7 +24,7 @@
                 {{$t('oemApp.channel')}}：{{appDetails.channel}}
               </a-col>
               <a-col>
-                APP key：{{appDetails.appKey}}
+                App key：{{appDetails.appKey}}
               </a-col>
             </a-row>
           </section>
@@ -54,18 +54,20 @@
   </section>
 </template>
 <script>
-import DefaultRoom from "./components/DefaultRoom.vue"
-import UserAgreement from "./components/UserAgreement.vue"
+import DefaultRoom from "@/views/appDevelop/OEMApp/configuration/interfaceConfig/DefaultRoom.vue"
+import UserAgreement from "@/views/appDevelop/OEMApp/configuration/releaseNecessary/UserAgreement.vue"
 import EditAppMsg from "../components/EditAppMsg.vue"
+import IOSPush from "../components/IOSPush.vue"
+import AndroidPush from "../components/AndroidPush.vue"
 import { getAppDetail } from "@/api/appExploit"
 
-
 export default{
-
   components:{
     DefaultRoom,
     UserAgreement,
     EditAppMsg,
+    IOSPush,
+    AndroidPush
   },
   data (){
     return {
@@ -79,22 +81,20 @@ export default{
         { label: this.$t('oemApp.tab.UserAgreement.2'), components:"UserAgreement", contentType:2 },
         { label: this.$t('oemApp.tab.UserAgreement.3'), components:"UserAgreement", contentType:3 },
         { label: this.$t('oemApp.tab.DefaultRoom'), components:"DefaultRoom" },
+        { label: this.$t('oemApp.tab.IOSCertificate'), components:"IOSPush" },
+        { label: this.$t('oemApp.tab.AndroidCertificate'), components:"AndroidPush" },
       ],
     }
   },
-  watch:{
-  },
-  computed:{
-  },
+  watch:{},
+  computed:{},
   async created(){
     this.appId = this.$route.query.appId ?? 0
     await this.getAppDetail()
   },
-  mounted(){
-
-  },
+  mounted(){},
   methods:{
-    // APP配置详情
+    // App配置详情
     async getAppDetail(){
       const res = await getAppDetail({appId:this.appId})
       if(res.code !== 0) return

@@ -125,3 +125,24 @@ export function companyChangename(data) {
   });
 }
 
+/**
+ * 指引检查并创建数据
+ */
+export function guideCheck(tenantId) {
+  return request({
+    url: "/v1/platform/web/open/product/guideCheck",
+    method: "post",
+    data:{tenantId},
+  });
+}
+
+/**
+ * 设置指引完成
+ */
+export function setHasGuided(tenantId) {
+  return request({
+    url: "/v1/platform/web/open/product/setHasGuided",
+    method: "post",
+    data:{tenantId},
+  });
+}

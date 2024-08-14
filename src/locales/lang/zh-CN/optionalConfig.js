@@ -1,7 +1,7 @@
 export default {
   "optionalConfig.title": "可选配置",
-  "optionalConfig.noData.text": "请先创建APP，再配置",
-  "optionalConfig.noData.button":"创建APP",
+  "optionalConfig.noData.text": "请先创建App，再配置",
+  "optionalConfig.noData.button":"创建App",
   "optionalConfig.tab.label.VoiceService": "语音服务",
   "optionalConfig.tab.label.ThirdPartyService": "第三方服务",
   "optionalConfig.VoiceService.title": "第三方语音支持",
@@ -50,10 +50,10 @@ export default {
   "optionalConfig.editor.placeholder.guide": "例如：通过 米家小爱 智能音箱语音控制智能设备。例如：“小爱同学，打开灯”",
   "optionalConfig.editor.label.content": "教程文档",
   "optionalConfig.editor.rules.guide": "请输入引导文案",
-  "optionalConfig.tab.label.autoUpgrade": "APP自动升级",
+  "optionalConfig.tab.label.autoUpgrade": "App自动升级",
   "optionalConfig.autoUpgrade.title": "配置更新下载地址",
   "optionalConfig.autoUpgrade.tips1": "配置下载地址后，系统会自动根据用户的手机系统和所处网络环境，跳转到对应的下载地址。",
-  "optionalConfig.autoUpgrade.tips2": "下载地址推荐使用发布到应用商店的详情页网址，方便用户下载更新您的APP",
+  "optionalConfig.autoUpgrade.tips2": "下载地址推荐使用发布到应用商店的详情页网址，方便用户下载更新您的App",
   "optionalConfig.autoUpgrade.label.iosUrl": "iOS下载地址",
   "optionalConfig.autoUpgrade.placeholder.iosUrl": "请输入iOS下载地址，例如：https://apps.apple.com/us/app/xxxxxxx",
   "optionalConfig.autoUpgrade.label.androidUrl": "国内安卓下载地址",
@@ -62,5 +62,10 @@ export default {
   "optionalConfig.autoUpgrade.placeholder.androidAbroadUrl": "适用于非中国境内的安卓用户，推荐使用“GooglePlay”链接",
   "optionalConfig.ThirdPartyService.google.login": "Google登录",
   "optionalConfig.ThirdPartyService.rules.clientID": "请输入Client ID",
+  "optionalConfig.ThirdPartyService.teamId.tips":"需要配置团队ID，iOS系统才能正常使用微信登录哦",
+  "optionalConfig.ThirdPartyService.config.now":"立即配置",
+  "optionalConfig.ThirdPartyService.config.later":"暂不配置",
+  "optionalConfig.ThirdPartyService.config.info":"配置信息",
+  "optionalConfig.ThirdPartyService.rule.teamId":"请输入团队ID"
   
 }

@@ -30,7 +30,7 @@
     <template v-if="fileData.filePath">
       <finished-test :data="fileData" :details="details" :productTypeId="productTypeId" :status="status" @reUpload="handleUpload"/>
     </template>
-    <!-- <app-test-account :productId="productId" v-if="status==2"/> -->
+    <app-test-account :productId="productId" v-if="status==2"/>
     <a-modal
       :title="$t('setting.test.service.upload.report.title')"
       :visible="visible"

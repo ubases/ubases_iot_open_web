@@ -24,7 +24,7 @@ export function deviceTriad(data) {
   return request({
     url: "/v1/platform/web/iot/deviceTriad/generator",
     method: "post",
-    timeout: 30*1000,
+    timeout: 120*1000,
     data,
   });
 }
@@ -38,7 +38,7 @@ export function deviceImport(data) {
   return request({
     url: "/v1/platform/web/iot/deviceTriad/import",
     method: "post",
-    timeout: 30*1000,
+    timeout: 120*1000,
     data,
   });
 }

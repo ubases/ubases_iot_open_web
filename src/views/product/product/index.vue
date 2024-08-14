@@ -119,19 +119,25 @@
           <a-divider v-if="record.status == 2" type="vertical" />
           <a-button v-if="record.status == 1" type="link" size="small" @click="productDetails(record.id)">{{$t('public.detail.text')}}</a-button>
           <a-divider v-if="record.status == 1" type="vertical" />
+          <a-button type="link" size="small" @click="handleLinkApp(record)">{{$t('product.link.app')}}</a-button>
+          <a-divider type="vertical" />
           <a-button type="link" size="small" @click="deleteProduct(record.id)">{{$t("public.delete")}}</a-button>
         </template>
       </a-table>
       <!-- /表格 -->
+      <link-app :visible="linkAppVisible" :productId="linkProductData.id" :produtKey="linkProductData.productKey" :allAppList="allAppList" @handleCancel="cancelLink" @handleOk="updateLink"></link-app>
     </a-page-header>
   </section>
 </template>
 <script>
 import { getProductList,getProductClassifyList, deleteProduct} from "@/api/product"
+import { getAppList } from "@/api/appExploit"
+import linkApp from "./components/linkApp.vue"
 
 export default {
   name: "ProductList",
   components:{
+    linkApp,
   },
   data() {
     return {
@@ -175,6 +181,11 @@ export default {
           width: "100px",
         },
         {
+          title: this.$t('product.link.app'),
+          dataIndex: "appListStr",
+          width: "20%",
+        },
+        {
           dataIndex: "updatedAt",
           title: this.$t('product.columns.updatedAt'),
           scopedSlots: { customRender: "updatedAt" },
@@ -184,35 +195,31 @@ export default {
           title: this.$t('public.action'),
           key: "action",
           align: "left",
-          width: "160px",
+          width: "260px",
           scopedSlots: { customRender: "action" },
         },
       ],
       dataSource: [],
       loading: false,
-      productTypeCascader:[]
+      productTypeCascader:[],
+      allAppList:[],
+      linkAppVisible:false,
+      linkProductData:{}
     };
   },
-  mounted() {
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.getProductList()
-      this.getProductClassifyList()
+  async mounted() {
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'queryParam', query.queryParam )
+        this.$set(this,'productTypeCascader', query.productTypeCascader )
+      }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/product/product/setting/index' || from.path === '/product/product/createProduct/index' || from.path === '/dashboard/index'
-    next()
+    await this.getProductList()
+    this.getProductClassifyList()
+    this.queryAppList()
   },
 
-  activated () {
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.getProductList()
-    }
-  },
   methods: {
     // 获取产品分类列表
     async getProductClassifyList() {
@@ -236,9 +243,26 @@ export default {
     async getProductList() {
       const res = await getProductList({...this.queryParam,page:this.pagination.current,limit:this.pagination.pageSize})
       if(res.code !== 0)return
-      this.dataSource = res.data?.list ?? []
+      this.dataSource = res.data.list?.map(item => {
+        return {
+          ...item,
+          appListStr: item.appList?.join('、') || ''
+        }
+      }) || []
       this.pagination.total = res.data.total
     },
+
+      //获取APP列表
+      async queryAppList() {
+        const res = await getAppList({})
+        if (res.code !== 0) return
+        this.allAppList = res.data?.list?.map(item=>{
+          return {
+            key:item.appKey,
+            name:item.name
+          }
+        }) || []
+      },
 
     // 查询
     query(){
@@ -294,8 +318,35 @@ export default {
       this.getProductList()
     },
 
+    // 点击关联应用
+    handleLinkApp(data){
+      this.linkProductData = data
+      this.linkAppVisible = true
+    },
+
+    cancelLink(){
+      this.linkAppVisible = false
+    },
+    updateLink(){
+      this.linkAppVisible = false
+      this.getProductList()
+    }
+  },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/product/product/setting/index' || from.path === '/product/product/createProduct/index'
+    next()
+  },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/product/product/setting/index' || from.path === '/product/product/createProduct/index'
+    next()
   },
   
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam, productTypeCascader:this.productTypeCascader}})
+    next();
+  }
 }
 </script>
 <style lang="less" scoped>

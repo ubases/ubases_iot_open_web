@@ -74,6 +74,7 @@ export default ({
     visible: { type: Boolean, default: false },
     data: {type: Object, default: ()=>{}},
     firmwareId: {type: String, default: ''},
+    source: { type: Number, default: 0 }
   },
   components:{
     UploadButton
@@ -105,7 +106,11 @@ export default ({
           if(this.data.id){
             res = await editFirmwareVersion({firmwareId:this.firmwareId,...this.data})
           } else{
-            res = await addFirmwareVersion({firmwareId:this.firmwareId,...this.data})
+            const params = {firmwareId:this.firmwareId,...this.data}
+            if(this.source){
+              params.source = this.source
+            }
+            res = await addFirmwareVersion(params)
           }
           this.confirmLoading = false;
           if(res.code !== 0 ) return
@@ -149,7 +154,7 @@ export default ({
 @import "../../../../global.less";
 
 /deep/.ant-form-item-label{
-  line-height: 30px;
+  line-height: 40px;
 }
 /deep/.ant-radio-wrapper{
   margin-right: 74px;

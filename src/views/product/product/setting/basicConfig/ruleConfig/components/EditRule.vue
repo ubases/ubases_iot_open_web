@@ -17,7 +17,7 @@
         <a-form-model-item :label="$t('setting.ruleConfig.columns.if')" prop="ifSpecs" >
           <a-row :gutter="20" type="flex" align="middle" v-for="(item,index) in formData.ifSpecs" :key="index">
             <a-col :xs="24" :md="7">
-              <a-select :disabled="type=='check'" v-model="item.dpId" :options="funcOptions" :placeholder="$t('setting.ruleConfig.placeholder')" @change="funcIfChange(item.dpId,index)"/>
+              <a-select :disabled="type=='check'" v-model="item.dpId" :options="ifFuncOptions" :placeholder="$t('setting.ruleConfig.placeholder')" @change="funcIfChange(item.dpId,index)"/>
             </a-col>
             <a-col :xs="24" :md="5" v-if="item.dpId">
               <a-select 
@@ -31,7 +31,7 @@
             <a-col :xs="24" :md="7" v-if="item.operate && item.operate != 5">
               <a-select 
                 :disabled="type=='check'"
-                v-if="dataSource[item.dpId].dataType == 'BOOL' || dataSource[item.dpId].dataType == 'ENUM'" 
+                v-if="dataSource[item.dpId].dataType == 'BOOL' || dataSource[item.dpId].dataType == 'ENUM' || dataSource[item.dpId].dataType == 'FAULT'"
                 v-model="item.value" 
                 :options="dataSource[item.dpId].dataSpecsList" 
                 :placeholder="$t('setting.ruleConfig.placeholder')" 
@@ -63,7 +63,7 @@
         <a-form-model-item :label="$t('setting.ruleConfig.columns.then')" prop="thenSpecs" >
           <a-row :gutter="20" type="flex" align="middle" v-for="(item,index) in formData.thenSpecs" :key="index">
             <a-col :xs="24" :md="7">
-              <a-select :disabled="type=='check'" v-model="item.dpId" :options="funcOptions" :placeholder="$t('setting.ruleConfig.placeholder')" @change="funcThenChange(item.dpId,index)"/>
+              <a-select :disabled="type=='check'" v-model="item.dpId" :options="thenFuncOptions" :placeholder="$t('setting.ruleConfig.placeholder')" @change="funcThenChange(item.dpId,index)"/>
             </a-col>
             <a-col :xs="24" :md="5" v-if="item.dpId">
               <a-select 
@@ -78,7 +78,7 @@
               <!-- 禁用、可用不需要设置值 -->
               <a-select 
               :disabled="type=='check'"
-                v-if="dataSource[item.dpId].dataType == 'BOOL' || dataSource[item.dpId].dataType == 'ENUM'"
+                v-if="dataSource[item.dpId].dataType == 'BOOL' || dataSource[item.dpId].dataType == 'ENUM' || dataSource[item.dpId].dataType == 'FAULT'"
                 v-model="item.value" 
                 :options="dataSource[item.dpId].dataSpecsList" 
                 :placeholder="$t('setting.ruleConfig.placeholder')" 
@@ -156,7 +156,8 @@ export default ({
         'DOUBLE':[{label:this.$t('public.greater.than'), value:3},{label:this.$t('public.equal'), value:1},{label:this.$t('public.less.than'), value:4},{label:this.$t('public.arbitrary.value'), value:5}],
         'ENUM':[{label:this.$t('public.equal'), value:1},{label:this.$t('public.unequal'), value:2},{label:this.$t('public.arbitrary.value'), value:5}],
         'TEXT':[{label:this.$t('public.equal'), value:1}],
-      },
+        'FAULT':[{label:this.$t('public.equal'), value:1}],
+      },  // 等于-1，不等于-2，大于-3，小于-4，任意值-5
     }
   },
   computed:{
@@ -169,14 +170,19 @@ export default ({
         return this.$t('setting.ruleConfig.checkRule.btn')
       }
     },
+    ifFuncOptions(){
+      return this.funcOptions.filter(item=>item.rwFlag == 'READ_WRITE' || item.rwFlag == 'READ')
+    },
+    thenFuncOptions(){
+      return this.funcOptions.filter(item=>item.rwFlag == 'READ_WRITE' || item.rwFlag == 'WRITE')
+    },
   },
   watch: {
     async visible(val){
       if(!val) return
       this.$refs.formData?.resetFields()
       if(this.type !=='add'){
-        const data = this.$deepClone(this.detail)
-        this.formData = { ...data, conditionType: `${data.conditionType}`}
+        this.formData = this.$deepClone(this.detail)
       } else {
         this.formData = {
           ifSpecs:[{dpId:null, operate:null, value:null}],
@@ -198,8 +204,8 @@ export default ({
         
         this.confirmLoading = true
         let res = this.type=='edit' 
-        ? await editRuleSet({...this.formData,conditionType:Number(this.formData.conditionType), ifSpecs:JSON.stringify(this.formData.ifSpecs), thenSpecs:JSON.stringify(this.formData.thenSpecs)}) 
-        : await addRuleSet({...this.formData,conditionType:Number(this.formData.conditionType), ifSpecs:JSON.stringify(this.formData.ifSpecs), thenSpecs:JSON.stringify(this.formData.thenSpecs), productId:this.productId, productKey:this.productKey, status:2})  // status 1 启动 2停用
+        ? await editRuleSet({...this.formData, ifSpecs:JSON.stringify(this.formData.ifSpecs), thenSpecs:JSON.stringify(this.formData.thenSpecs)}) 
+        : await addRuleSet({...this.formData, ifSpecs:JSON.stringify(this.formData.ifSpecs), thenSpecs:JSON.stringify(this.formData.thenSpecs), productId:this.productId, productKey:this.productKey, status:2})  // status 1 启动 2停用
         this.confirmLoading = false
         if(res.code !==0 ) return
         this.$emit("handleOk")
@@ -228,7 +234,7 @@ export default ({
       if(!this.formData.ifSpecs[index].operate){
         this.formData.ifSpecs[index].operate = 1
       }
-      if(data.dataType == 'ENUM' || data.dataType == 'BOOL'){
+      if(data.dataType == 'ENUM' || data.dataType == 'FAULT' || data.dataType == 'BOOL'){
         this.formData.ifSpecs[index].value = data.dataSpecsList[0]?.value || 0
       } else if(data.dataType == 'INT' || data.dataType == 'FLOAT' || data.dataType == 'DOUBLE'){
         this.formData.ifSpecs[index].value = data.dataSpecs.min
@@ -254,7 +260,7 @@ export default ({
       if(!this.formData.thenSpecs[index].operate){
         this.formData.thenSpecs[index].operate = 1
       }
-      if(data.dataType == 'ENUM' || data.dataType == 'BOOL'){
+      if(data.dataType == 'ENUM' || data.dataType == 'FAULT' || data.dataType == 'BOOL'){
         this.formData.thenSpecs[index].value = data.dataSpecsList[0]?.value || 0
       } else if(data.dataType == 'INT' || data.dataType == 'FLOAT' || data.dataType == 'DOUBLE'){
         this.formData.thenSpecs[index].value = data.dataSpecs.min

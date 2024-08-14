@@ -1,11 +1,12 @@
 <template>
   <section class="page-wrap no-padding" @click="showSearch=false">
     <a-page-header :title="$t('fault.statistics.title')" >
-      <product-change v-show="!noData" :detailList="['productTypeName','networkTypeDesc']" @dataChange="productChange" @isData="isData" />
+      <product-change v-show="!noData" :detailList="['productKey','productTypeName','networkTypeDesc']" @dataChange="productChange" @isData="isData" />
       <section v-if="!noData" class="content">
         <section>
           <div class="flex x-space-between">
             <h4>{{$t('fault.statistics.count.title')}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('num_last12months',$t('fault.statistics.count.title'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="countTooltip" class="tooltip"></div>
@@ -15,6 +16,7 @@
         <section>
           <div class="flex x-space-between">
             <h4>{{$t('fault.statistics.count.type')}}</h4>
+            <div class="export-text tap-pointer" @click="handleDownload('type_all',$t('fault.statistics.count.type'))">{{ $t('public.export') }}</div>
           </div>
           <section class="chart-wrap">
             <div id="typeTooltip" class="tooltip"></div>
@@ -185,6 +187,17 @@ export default {
           }
         },
       })
+    },
+
+    handleDownload(type,name){
+      this.$DownloadTemplate(
+        this,
+        {
+          url: `/v1/platform/web/data/open/overview/deviceFault/export?productKey=${this.productKey}&dataType=${type}`,
+        },
+        name +".xlsx",
+        "get"
+      );
     }
   },
   beforeDestroy(){
@@ -200,6 +213,9 @@ export default {
 }
 .content{
   padding: 25px 20px 20px;
+  .export-text{
+    color: @primary-color;
+  }
   .chart-wrap{
     padding: 43px 20px 43px 10px;
     position: relative;

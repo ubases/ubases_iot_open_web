@@ -3,7 +3,7 @@
     <a-page-header :title="$t('deviceDebugging.title')">
       <template v-if="!noData">
         <!-- 产品详情 -->
-        <product-change :param="{enableCheck:true}" @dataChange="productChange" @isData="isData" :productId="productId"/>
+        <product-change :param="{enableCheck:true }" @dataChange="productChange" @isData="isData" :productId="productId"/>
         <!-- /产品详情 -->
 
         <!-- 真实设备调试 -->
@@ -25,7 +25,7 @@
             :loading="loading"
             :pagination="false"
           >
-            <template  slot="appName" slot-scope="text, record">
+            <template slot="appName" slot-scope="text, record">
               {{record.appName}}&nbsp;&nbsp;{{record.userAccount}}
             </template>
             <template v-slot:action="item">
@@ -63,6 +63,9 @@
             :loading="virtualLoading"
             :pagination="false"
           >
+            <template slot="appName" slot-scope="text, record">
+              {{record.appName}}&nbsp;&nbsp;{{record.userAccount}}
+            </template>
             <template v-slot:action="item">
               <a-button type="link" size="small" @click="handleDetails(item,2)">
                 {{ $t("public.debug") }}
@@ -79,11 +82,33 @@
         <no-data :text="$t('deviceDebugging.noData.text')" :buttonText="$t('deviceDebugging.noData.button')" path="/product/product/createProduct/index"/>
       </template>
       <!-- 添加真实设备弹窗 -->
-      <create-real-device :visible="addRealVisible" :productId="productId" :productKey="productDetails.productKey" @cancelCreate="exchangeCreateReal" @sumitCreate="sumitCreateReal"/>
+      <create-real-device 
+      :visible="addRealVisible" 
+      :productId="productId" 
+      :productKey="productDetails.productKey" 
+      :areaOptions="areaOptions" 
+      :appOptions="appOptions" 
+      @cancelCreate="exchangeCreateReal" 
+      @sumitCreate="sumitCreateReal"/>
       <!-- 添加虚拟设备弹窗 -->
-      <create-virtual-device :visible="addVirtualVisible" :productId="productId" @cancelCreate="exchangeCreateVirtual" @sumitCreate="sumitCreateVirtual" />
+      <create-virtual-device 
+      :visible="addVirtualVisible" 
+      :productId="productId" 
+      :areaOptions="areaOptions" 
+      :appOptions="appOptions" 
+      @cancelCreate="exchangeCreateVirtual" 
+      @sumitCreate="sumitCreateVirtual" />
       <!-- 添加/ 更改APP账号 -->
-      <update-app-account :visible="updateAccountVisible" :productId="productId" :deviceId="appData.did" :form="appData" :actionType="appActionType" @cancelCreate="exchangeUpdateAccount" @sumitCreate="sumitUpdateAccount" />
+      <update-app-account 
+      :visible="updateAccountVisible" 
+      :productId="productId" 
+      :deviceId="appData.did" 
+      :form="appData" 
+      :actionType="appActionType" 
+      :appOptions="appOptions" 
+      :areaOptions="areaOptions" 
+      @cancelCreate="exchangeUpdateAccount"
+      @sumitCreate="sumitUpdateAccount" />
     </a-page-header>
   </section>
 </template>
@@ -94,6 +119,9 @@ import CreateVirtualDevice from './component/CreateVirtualDevice.vue'
 import UpdateAppAccount from './component/UpdateAppAccount.vue'
 import { getTestDeviceList,deleteTestDevice } from '@/api/device'
 import NoData from "@/components/NoData/index.vue"
+import { getAppRegionList} from "@/api/oemAppDebug"
+import { getAppList } from "@/api/appExploit"
+import { qrCodeUrl } from '@/api/device'
 
 export default {
   name: "deviceDebugging",
@@ -141,9 +169,9 @@ export default {
           scopedSlots: { customRender: "did" },
         },
         {
-          title: this.$t('deviceDebugging.virtualDevice.columns.userId'),
-          dataIndex: "userAccount",
-          scopedSlots: { customRender: "userAccount" },
+          title: this.$t('deviceDebugging.realDevice.columns.appName'),
+          dataIndex: "appName",
+          scopedSlots: { customRender: "appName" },
         },
         {
           title: this.$t("public.action"),
@@ -156,39 +184,30 @@ export default {
       updateAccountVisible:false,
       appData:{},
       appActionType:'',
-      productId:''
+      productId:'',
+      areaOptions:[],
+      appOptions:[],
     };
   },
   created(){
-    this.productId = this.$route.params.productId || ''
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/product/deviceDebugging/debugDetails/index' || from.path === '/dashboard/index'
-    next()
-  },
-
-  activated () {
     if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      if(!this.productId) return
-      this.realList()
-      this.virtualList()
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'productId', query.productId)
+      }
     }
   },
-  methods: {
 
+  methods: {
     // 产品切换
-    productChange(data){
+    async productChange(data){
       this.productDetails = data
-      if(this.productId && this.productId == this.productDetails.id) return
       this.productId = this.productDetails.id
-      this.realList()
-      this.virtualList()
+      await this.realList()
+      await this.virtualList()
+      await this.getAppList()
+      this.getAreaList()
+      this.qrCodeUrl()
     },
 
     // 是否有产品
@@ -207,7 +226,8 @@ export default {
     async virtualList(){
       const res = await getTestDeviceList({productId : this.productId, isVirtual:1})
       if (res.code !== 0) return
-      this.virtualDataSource = res.data.list
+      this.virtualDataSource = res.data.list || []
+
     },
 
     // 删除设备
@@ -217,6 +237,45 @@ export default {
         if (res.code !== 0) return
         useType === 2 ? this.virtualList() : this.realList()
       })
+    },
+
+    async getAppList() {
+      const res = await getAppList()
+      if (res.code !== 0) return
+      this.appOptions = res.data?.list?.map(item=>{
+        return {
+          label:item.name,
+          value:item.appKey,
+          version:item.version,
+          appId:item.id
+        }
+      }) || []
+
+    },
+
+    // 获取构建包二维码链接
+    async qrCodeUrl(){
+      const res = await qrCodeUrl()
+      if(res.code !== 0  || !res.data || !res.data.appKey) return
+      if(!this.appOptions.some(item=>item.value == res.data.appKey)){
+        if(res.data.url){
+          this.appOptions.unshift({
+            label:`${res.data.name}（公版）`,
+            value:res.data.appKey,
+            url:res.data.url
+          })
+        }
+      } else {
+        const index = this.appOptions.findIndex(item=>item.value === res.data.appKey)
+        this.appOptions[index].label = `${this.appOptions[index].label}（公版）`
+      }
+    },
+
+    // 获取区域列表
+    async getAreaList(){
+      const res = await getAppRegionList()
+      if( res.code !== 0 ) return
+      this.areaOptions = res.data.map(item=>{ return { value: item.id, label: item.describe } }) || []
     },
 
     // 设备调试
@@ -252,7 +311,7 @@ export default {
       this.virtualList()
     },
 
-    // 添加/更改APP账号弹窗
+    // 添加/更改App账号弹窗
     exchangeUpdateAccount(item){
       if(item) {
         this.appData = {...item}
@@ -261,12 +320,22 @@ export default {
       this.updateAccountVisible = !this.updateAccountVisible
     },
 
-    // 确认添加/更改APP账号
+    // 确认添加/更改App账号
     sumitUpdateAccount(){
       this.updateAccountVisible = false
       this.realList()
     }
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/product/deviceDebugging/debugDetails/index'
+    next()
+  },
+
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{productId:this.productId}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

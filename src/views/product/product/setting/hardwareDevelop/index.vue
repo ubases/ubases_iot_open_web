@@ -2,26 +2,30 @@
   <section>
     <section class="card-header flex y-axis-center x-space-between">
       <span class="title" v-text="moduleSelected.length === 0 ? $t('setting.hardware.develop.select.module') : $t('setting.hardware.develop.selected.module')"></span>
-      <a-button v-if="status == 2 && moduleSelected.length > 0" class="exchange-button" @click="exchangeModule">{{$t('public.exchange')}}</a-button>
+      <div class="flex">
+        <a-button v-if="status == 2 && moduleSelected.length > 0" class="exchange-button" @click="cancelModule">{{$t('setting.hardware.develop.selected.module.cancel')}}</a-button>
+        <a-button v-if="status == 2 && moduleSelected.length > 0" class="exchange-button" @click="exchangeModule">{{$t('public.exchange')}}</a-button>
+      </div>
     </section>
     <section>
       <a-table
-          rowKey="id"
-          size="small"
-          :data-source="dataSource"
-          :columns="columnList"
-          :loading="customLoading"
-          :pagination="false"
-        >
-          <div slot="version" slot-scope="text, record">
-            <p>{{record.version}}</p>
-            <a-button v-if="(status == 2 && record.versionCount > 1)" size="small" type="link" @click="changeVersion('module')">{{$t('setting.hardware.develop.button.changeVersion')}}</a-button>
-          </div>
-          <template v-slot:action="record">
-            <a-button type="link" v-if="moduleSelected.length !== 0" :disabled="!record.firmwareUrl" size="small" @click="downloadFirmware(record)">{{$t("setting.hardware.develop.button.downloadFirmware")}}</a-button>
-            <a-button type="link" v-if="status == 2 && moduleSelected.length === 0" @click="handleSelectModule(record)">{{$t('setting.hardware.develop.select')}}</a-button>
-          </template>
-        </a-table>
+        rowKey="id"
+        size="small"
+        :data-source="dataSource"
+        :columns="columnList"
+        :loading="customLoading"
+        :pagination="false"
+      >
+        <div slot="version" slot-scope="text, record">
+          <p>{{record.version || '无版本'}}</p>
+          
+          <a-button v-if="(status == 2 && record.versionCount > 1)" size="small" type="link" @click="changeVersion('module')">{{$t('setting.hardware.develop.button.changeVersion')}}</a-button>
+        </div>
+        <template v-slot:action="record">
+          <a-button type="link" v-if="moduleSelected.length !== 0" :disabled="!record.firmwareUrl" size="small" @click="downloadFirmware(record)">{{$t("setting.hardware.develop.button.downloadFirmware")}}</a-button>
+          <a-button type="link" v-if="status == 2 && moduleSelected.length === 0" @click="handleSelectModule(record)">{{$t('setting.hardware.develop.select')}}</a-button>
+        </template>
+      </a-table>
     </section>
     <section class="card-header flex y-axis-center x-space-between">
       <span class="title">{{$t('setting.hardware.develop.customize.firmware')}}</span>
@@ -32,27 +36,28 @@
     </section>
     <section class="customize-list" v-if="customizeData.length > 0">
       <a-table
-          rowKey="id"
-          size="small"
-          :data-source="customizeData"
-          :columns="customizeColumns"
-          :loading="customLoading"
-          :pagination="false"
-        >
-          <div slot="firmwareInfo">
-            {{$t('setting.hardware.develop.firmwareInfo.text')}}
-          </div>
-          <div slot="firmwareType" slot-scope="firmwareType">
-            {{$DictName('firmware_type',firmwareType)}}
-          </div>
-          <template v-slot:version="record">
-            <p>{{record.version}}</p>
-            <a-button v-if="(status == 2 && record.versionCount > 1)" size="small" type="link" @click="changeVersion('custom',record)">{{$t('setting.hardware.develop.button.changeVersion')}}</a-button>
-          </template>
-          <template v-slot:action="record" v-if="status == 2">
-            <a-button type="link" size="small" @click="disassociate(record)">{{$t("setting.hardware.develop.button.disassociate")}}</a-button>
-          </template>
-        </a-table>
+        rowKey="id"
+        size="small"
+        :data-source="customizeData"
+        :columns="customizeColumns"
+        :loading="customLoading"
+        :pagination="false"
+      >
+        <div slot="firmwareInfo">
+          {{$t('setting.hardware.develop.firmwareInfo.text')}}
+        </div>
+        <div slot="firmwareType" slot-scope="firmwareType">
+          {{$DictName('firmware_type',firmwareType)}}
+        </div>
+        <template v-slot:version="record">
+          <p>{{record.version || '无版本'}}</p>
+          <a-button v-if="!record.version && record.versionCount ==0 " size="small" type="link" @click="addVersion(record)">{{$t('firmware.details.version.add')}}</a-button>
+          <a-button v-if="status == 2 && (record.versionCount > 1 || (!record.version && record.versionCount > 0))" size="small" type="link" @click="changeVersion('custom',record)">{{$t('setting.hardware.develop.button.changeVersion')}}</a-button>
+        </template>
+        <template v-slot:action="record" v-if="status == 2">
+          <a-button type="link" size="small" @click="disassociate(record)">{{$t("setting.hardware.develop.button.disassociate")}}</a-button>
+        </template>
+      </a-table>
     </section>
 
     <section class="card-header">
@@ -68,6 +73,7 @@
     </section>
     <!-- 更换模组 -->
     <a-modal
+      class="change-modal"
       :title="changeType === 'module'? $t('setting.hardware.develop.replace.module'): $t('setting.hardware.develop.relevance.firmware.title')"
       :width="1060"
       :visible="exchangeVisible"
@@ -88,6 +94,7 @@
     </a-modal>
     <!-- /更换模组 -->
     <change-version 
+      class="change-modal"
       :visible="changeVersionVisible"
       :data="versionData"
       :productId="productId"
@@ -96,6 +103,7 @@
       @handleSelect="sumitChangeVersion"
     />
     <add-firmware :visible="addFirmwareVisible" :productId="productId" :disabledType="disabledType" @sumitEdit="sumitAddFirmware" @cancelEdit="cancelAddFirmware"/>
+    <edit-version :visible="editVersionVisible" :data="firmwareVersionData" :firmwareId="firmwareVersionId" :source="1" @cancelEdit="editVersionVisible=false" @sumitEdit="sumitEditVersion"></edit-version>
   </section>
 
 </template>
@@ -106,6 +114,7 @@ import ButtonCard from "../../components/ButtonCard.vue"
 import ChangeVersion from "./ChangeVersion.vue"
 import { getModuleList, selectModule, getCustomizeList, removeCustomerFirmware,selectCustomerFirmware } from "@/api/product"
 import AddFirmware from "../../../firmware/component/addFirmware.vue"
+import EditVersion from '../../../firmware/component/EditVersion.vue'
 import moment from 'moment'
 
 export default({
@@ -122,6 +131,7 @@ export default({
     ButtonCard,
     ChangeVersion,
     AddFirmware,
+    EditVersion
   },
   data() {
     return {
@@ -132,16 +142,18 @@ export default({
         { title:this.$t('setting.hardware.develop.column.moduleName'), dataIndex:"moduleName", width: '18%'},
         { title:this.$t('setting.hardware.develop.column.firmwareTypeName'), dataIndex:"firmwareTypeName", width: '18%'},
         { title:this.$t('setting.hardware.develop.column.firmwareName'), dataIndex:"firmwareName", width: '18%'},
+        { title:this.$t('setting.hardware.develop.column.firmwareNameEn'), dataIndex:"firmwareNameEn", width: '18%'},
         { title:this.$t('setting.hardware.develop.column.firmwareId'), dataIndex:"firmwareKey", width: '18%'},
         { title:this.$t('setting.hardware.develop.column.currentVersion'), dataIndex:"version",scopedSlots: { customRender: "version" }, width: '18%'},
         { title:this.$t('public.action'), key: "action", scopedSlots:{ customRender: "action" }, width: '10%'}
       ],
       columnList:[],
       changeColumn:[
-        { name:this.$t('setting.hardware.develop.column.moduleName'), span:"7", slot:"moduleName"},
+        { name:this.$t('setting.hardware.develop.column.moduleName'), span:"5", slot:"moduleName"},
         { name:this.$t('setting.hardware.develop.column.firmwareTypeName'), span:"4", slot:"firmwareTypeName"},
-        { name:this.$t('setting.hardware.develop.column.firmwareName'), span:"5", slot:"firmwareName"},
-        { name:this.$t('setting.hardware.develop.column.firmwareId'), span:"6", slot:"firmwareKey"},
+        { name:this.$t('setting.hardware.develop.column.firmwareName'), span:"4", slot:"firmwareName"},
+        { name:this.$t('setting.hardware.develop.column.firmwareNameEn'), span:"4", slot:"firmwareNameEn"},
+        { name:this.$t('setting.hardware.develop.column.firmwareId'), span:"4", slot:"firmwareKey"},
         { name:this.$t('public.action'), span:"2", slot:"action"}
       ],
       downloadList:[{
@@ -158,6 +170,7 @@ export default({
         { title: this.$t('setting.hardware.develop.columns.firmwareInfo'), dataIndex: "firmwareInfo", scopedSlots: { customRender: "firmwareInfo" }, width: '18%'},
         { title: this.$t('setting.hardware.develop.columns.firmwareType'), dataIndex: "firmwareType", scopedSlots: { customRender: "firmwareType" }, width: '18%'},
         { title: this.$t('setting.hardware.develop.columns.firmwareName'), dataIndex: "firmwareName", width: '18%'},
+        { title:this.$t('setting.hardware.develop.column.firmwareNameEn'), dataIndex:"firmwareNameEn", width: '18%'},
         { title: this.$t('setting.hardware.develop.columns.firmwareKey'), dataIndex: "firmwareKey", width: '18%'},
         { title: this.$t('setting.hardware.develop.columns.currentVersion'), key: "version", scopedSlots: { customRender: "version" }, width: '18%'},
         { title: this.$t('public.action'), key: "action", scopedSlots: { customRender: "action" }, width: '10%'},
@@ -166,11 +179,12 @@ export default({
       addFirmwareVisible: false,
       changeType:'',
       customizeColumnList:[
-        { name: this.$t('setting.hardware.develop.columns.firmwareName'), slot: "name", span: 5},
-        { name: this.$t('setting.hardware.develop.columns.firmwareKey'), slot: "firmwareKey", span: 5},
+        { name: this.$t('setting.hardware.develop.columns.firmwareName'), slot: "name", span: 4},
+        { name:this.$t('setting.hardware.develop.column.firmwareNameEn'), slot:"firmwareNameEn", span: 4},
+        { name: this.$t('setting.hardware.develop.columns.firmwareKey'), slot: "firmwareKey", span: 4},
         { name: this.$t('setting.hardware.develop.columns.firmwareType'), slot: "type", span: 4},
-        { name: this.$t('setting.hardware.develop.columns.newestVersion'), slot: "version", span: 4},
-        { name: this.$t('setting.hardware.develop.columns.firmwareIdentifName'), slot: "flag", span: 4},
+        { name: this.$t('setting.hardware.develop.columns.newestVersion'), slot: "version", span: 3},
+        { name: this.$t('setting.hardware.develop.columns.firmwareIdentifName'), slot: "flag", span: 3},
         { name: this.$t('public.action'), slot: "action", span: 2},
       ],
       exchangeDataList:[],
@@ -178,7 +192,11 @@ export default({
       confirmLoading: false,
       associatedList:[],
       versionEditType: '',
-      disabledType:[]
+      disabledType:[],
+      editVersionVisible:false,
+      firmwareVersionId:'',
+      firmwareVersionData:{}
+      // isSuportMulti:false
     }
   },
   computed:{
@@ -272,6 +290,13 @@ export default({
       this.$emit('refreshDetails')
     },
 
+    // 取消选择模组
+    async cancelModule(){
+      const res = await removeCustomerFirmware({productId: this.productId, id: this.moduleSelected[0].relationId})
+        if(res.code!==0)return
+        this.$message.info(this.$t('public.action.succeed'))
+        this.$emit('refreshDetails')
+    },
 
     handleCancel() {
       this.exchangeVisible = false
@@ -304,10 +329,11 @@ export default({
 
     // 查询已选择的模组
     defaultModule(){
-      if(!this.details?.moduleId) return
-      const selected = this.details?.module
-      if(!selected) return
-      this.handleSelect(selected)
+      if(!this.details?.moduleId || !this.details?.module){
+        this.moduleSelected = []
+      } else{
+        this.handleSelect(this.details.module)
+      }
     },
 
     // 显示资料下载
@@ -338,6 +364,19 @@ export default({
       this.changeVersionVisible = true
     },
 
+    // 添加版本
+    addVersion(data){
+      this.firmwareVersionData = { productId: data.productId, relationId: data.id }
+      this.firmwareVersionId = data.firmwareId
+      this.editVersionVisible = true
+    },
+
+    //确认添加版本
+    sumitEditVersion(){
+      this.editVersionVisible = false
+      this.$emit('refreshDetails')
+    },
+
     // 确认切换版本
     sumitChangeVersion(){
       this.$emit('refreshDetails')
@@ -363,6 +402,7 @@ export default({
     addCustomFirmware(){
       const moduleData = this.$deepClone(this.moduleSelected)
       this.disabledType = moduleData.length >0 ? [...this.selectedType, moduleData?.pop()?.firmwareType] :[...this.selectedType]
+      this.disabledType = this.disabledType.filter(item=>item != 6)
       this.addFirmwareVisible = true
     },
 
@@ -389,18 +429,27 @@ export default({
       const list = res.data.list
       this.exchangeDataList = list.map(item=>{
         
-        if(type.some(t=>item.type==t)){
+        if(type.some(t=>item.type==t) && item.type !=6){
           item.disabled = true
         } else {
           item.active = 0
         }
         if(this.customizeData.some(d=>d.firmwareId == item.id)) {
           item.associated = true
+          item.disabled = true
         }
         return item 
       })
       this.exchangeVisible = true
     },
+
+    // 同固件类型是否支持多个
+    // handleMultiChange(){
+    //   // this.isSuportMulti
+    //   const type = ''
+    //   this.$InfoModal(this, this.$t('setting.hardware.develop.multi.tips',{type}), this.$t('setting.hardware.develop.closed.fault'), this.$t('setting.hardware.develop.know')).then(async() => {
+    //   })
+    // }
 
   }
 })
@@ -414,6 +463,7 @@ export default({
       color: @aithings-text-color-black;
     }
     .exchange-button{
+      margin-left: 10px;
       padding: 0 33px;
       border: 1px solid @primary-color;
       color: @primary-color;
@@ -436,7 +486,7 @@ export default({
     color: @aithings-warning-color;
     line-height: 20px;
   }
-  /deep/ .ant-modal-body{
+  .change-modal /deep/ .ant-modal-body{
     padding: 11px 20px 64px;
   }
   .change-version{
@@ -447,5 +497,8 @@ export default({
     &:focus{
       border: 0;
     }
+  }
+  .multi-switch{
+    padding-right: 20px;
   }
 </style>

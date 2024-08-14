@@ -8,7 +8,13 @@
   >
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="form" class="regular-form" :model="form" :rules="rules">
-        <a-form-model-item :label="$t('editor.label.lang')" prop="lang"  :label-col="{ span: 3 }" :wrapper-col="{ span: 15 }">
+        <a-form-model-item :label="$t('editor.label.version')" prop="version"  :label-col="{ span: 4 }" :wrapper-col="{ span: 15 }">
+          {{ form.version }}
+        </a-form-model-item>
+        <a-form-model-item v-if="contentType!=3" :label="$t('editor.label.remindType')" prop="remindMode"  :label-col="{ span: 4 }" :wrapper-col="{ span: 15 }">
+          <a-radio-group :disabled="editType=='check'" :options="$DictList('protocol_remind_type')" v-model="form.remindMode"/>
+        </a-form-model-item>
+        <a-form-model-item :label="$t('editor.label.lang')" prop="lang"  :label-col="{ span: 4 }" :wrapper-col="{ span: 15 }">
           <a-select v-model="form.lang" :placeholder="$t('editor.placeholder.lang')" :options="langList" @change="langChange"/>
         </a-form-model-item>
         <a-form-model-item prop="content" label="">
@@ -48,7 +54,8 @@ export default ({
     return {
       confirmLoading:false,
       rules:{
-        lang:[{ required: true, message: this.$t('editor.rules.lang'), trigger: 'change' },],
+        remindMode:[{ required: true, message: this.$t('editor.rules.remindType'), trigger: 'change' }],
+        lang:[{ required: true, message: this.$t('editor.rules.lang'), trigger: 'change' }],
         content:[
           { required: true, message: this.$t('editor.rules.content.1'), trigger: 'change' },
           { max:"10000", message: this.$t('editor.rules.content.2'), trigger: 'change' },
@@ -66,7 +73,7 @@ export default ({
       if(this.editType !== 'add'){
         this.getAppDocumentDetail()
       } else{
-        this.form = {...this.data, lang:this.currentLang}
+        this.form = {remindMode:1, ...this.data, lang:this.currentLang}
       }
     },
   },
@@ -74,19 +81,17 @@ export default ({
     this.langList = this.$DictList('language_type')
   },
   methods:{
-    async getAppDocumentDetail(){
+    async getAppDocumentDetail(remindMode){
       this.confirmLoading = true
       const { appId, contentType, version } = this.data
       const res = await getAppDocumentDetail({ appId, contentType, version, lang:this.currentLang })
       if(res.code !== 0 ) return
       this.$nextTick(()=>{
-        this.form = {...res.data}
+        this.form = {...res.data, remindMode:remindMode?remindMode:res.data.remindMode || 1}
         this.$nextTick(()=>{
           this.confirmLoading = false
         })
-        
       })
-      
     },
 
     editorChange(html){
@@ -97,7 +102,7 @@ export default ({
     langChange(val){
       this.currentLang = val
       this.$set(this.form,'content','')
-      this.getAppDocumentDetail()
+      this.getAppDocumentDetail(this.form.remindMode)
     },
 
     handleCancel(){

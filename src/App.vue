@@ -1,10 +1,9 @@
 <template>
   <a-config-provider :locale="locale">
     <div id="app">
-      <keep-alive>
-        <router-view  v-if="$route.meta.keepalive"/>
-      </keep-alive>
-      <router-view v-if="!$route.meta.keepalive"/>
+      <!-- <keep-alive> -->
+        <router-view/>
+      <!-- </keep-alive> -->
     </div>
   </a-config-provider>
 </template>
@@ -14,6 +13,7 @@ import { domTitle, setDocumentTitle } from '@/utils/domUtil'
 import { i18nRender } from '@/locales'
 
 export default {
+  components:{},
   data () {
     return {
     }
@@ -26,11 +26,23 @@ export default {
 
       return this.$i18n.getLocaleMessage(this.$store.getters.lang).antLocale
     }
-  }
+  },
+  watch:{
+  },
+  mounted(){
+  },
+  methods:{
+  },
+
+  beforeDestroy() {
+  },
 }
 </script>
 <style lang="less">
   @import "./global.less";
+  #app{
+    position: relative;
+  }
 // 全局的提示弹窗样式
 .global-delete-modal{
   font-size: 14px;

@@ -24,7 +24,7 @@
                   {{$t('oemApp.channel')}}：{{appDetails.channel}}
                 </a-col>
                 <a-col>
-                  APP key：{{appDetails.appKey}}
+                  App key：{{appDetails.appKey}}
                 </a-col>
               </a-row>
             </section>
@@ -80,7 +80,7 @@ export default {
     await this.getAppDetail()
   },
   methods: {
-    // APP配置详情
+    // App配置详情
     async getAppDetail(){
       const res = await getAppDetail({appId:this.appId})
       if(res.code !== 0) return

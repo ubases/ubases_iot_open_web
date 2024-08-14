@@ -93,12 +93,13 @@ export default ({
 
     resetParam(){
       this.queryParam = {query:{}}
-      this.queryList()
+      this.totalNum = 0
     },
 
     handleCancel(){
       this.$emit('handleClose')
       this.queryParam = {}
+      this.totalNum = 0
     },
 
     async handleOk(){
@@ -111,10 +112,12 @@ export default ({
         },
         this.$t('device.export.triple.fileName') + ".csv",
         "get"
-      );
-      this.confirmLoading = false
-      this.$emit('handleClose')
-      this.queryParam = {}
+      ).then(()=>{
+        this.confirmLoading = false
+        this.$emit('handleClose')
+        this.queryParam = {}
+        this.totalNum = 0
+      })
     },
   }
 })

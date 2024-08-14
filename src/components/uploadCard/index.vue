@@ -28,6 +28,7 @@
 import { beforeUpload } from "@/utils/validate"
 import { PlusIcon } from "@/core/icons"
 import { uploadFile } from "@/api/common"
+import { getBase64 } from "@/utils/util"
 
 export default ({
   name:"UploadCard",
@@ -45,6 +46,7 @@ export default ({
     warningFileType: { type: String, default: '' },   // 提示语的文件类型
     fileUrl: { type: String, default: '' },    // 已上传的文件地址
     catalogName: { type: String, default: 'open' },    // 文件上传至服务器的目录
+    isRequest: { type: Boolean, default: true },     // 是否上传接口
   },
   components:{
     PlusIcon
@@ -66,13 +68,19 @@ export default ({
 
     // 图片上传
     async customRequest(fileData){
-      this.isLoading = true
-      const file = fileData.file
-      const res = await uploadFile(file,this.catalogName)
-      this.isLoading = false
-      if (res.code !== 0) return
-      this.$emit('uploaded',res.data)
-      this.$message.success(this.$t('public.upload.succeed'))
+      if(!this.isRequest){
+        const res = await getBase64(fileData.file)
+        this.$emit('uploaded',{file:fileData.file,url:res})
+      } else {
+        this.isLoading = true
+        const file = fileData.file
+        const res = await uploadFile(file,this.catalogName)
+        this.isLoading = false
+        if (res.code !== 0) return
+        this.$emit('uploaded',res.data)
+        this.$message.success(this.$t('public.upload.succeed'))
+      }
+
     }
   }
 

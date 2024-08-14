@@ -96,7 +96,7 @@ export default {
     appChange(data){
       this.appId = data.appId
     },
-    // 是否有APP
+    // 是否有App
     isData(value){
       this.noData = !value
     },
@@ -109,9 +109,7 @@ export default {
       this.exportVisible = false;
       this.$DownloadTemplate(
         this,
-        {
-          url: `/v1/platform/open/lang/customResources/download?appKey=${this.appId}`,
-        },
+        { url: `/v1/platform/open/lang/customResources/download?appKey=${this.appId}` },
         this.$t('appMultilingual.export.fileName') +".xlsx",
         "get"
       );

@@ -16,5 +16,7 @@ export default {
   "createOemApp.rules.name": "请输入应用名称",
   "createOemApp.rules.iosName": "请按规则输入iOS应用包名",
   "createOemApp.rules.androidName": "请按规则输入Android应用包名",
-  "createOemApp.rules.region": "请选择可使用的国家和地区"
+  "createOemApp.rules.region": "请选择可使用的国家和地区",
+  "createOemApp.label.teamId":"团队ID",
+  "createOemApp.remind.teamId":"iOS系统：第三方登录后跳转回App会用到哦。"
 }

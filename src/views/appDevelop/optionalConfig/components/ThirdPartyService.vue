@@ -6,7 +6,7 @@
         <a-checkbox-group @change="handleChange" v-model="thirdData">
           <div class="card flex" v-for="(item,index) in serviceList" :key="index">
             <section class="flex y-axis-center">
-              <a-checkbox :value="item.code"></a-checkbox>
+              <a-checkbox :value="item.code" @change="e=>checkboxChange(e,item)"></a-checkbox>
               <img :src="getImage(item)" class="image"/>
               <span class="name">{{item.name}}</span>
               <p class="apple-detail" v-if="item.code == 'appleid'">{{$t('optionalConfig.ThirdPartyService.apple.detail')}}</p>
@@ -37,15 +37,41 @@
     <footer class="footer">
       <a-button @click="handleSave" class="save-button">{{$t('optionalConfig.ThirdPartyService.saveAndPublish')}}</a-button>
     </footer>
+    <a-modal 
+      v-model="teamIdVisible" 
+      :width="420"
+      :title="$t('optionalConfig.ThirdPartyService.config.info')" 
+      :ok-text="$t('public.submit')" 
+      :cancel-text="$t('public.cancel')" 
+      :closable="false"
+      :centered="true"
+      @ok="sumitTeamId"
+      >
+      <a-form-model
+        ref="ruleForm"
+        :model="form"
+        :rules="rules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+      <a-form-model-item :label="$t('after.sales.service.appName')">
+          {{ appData.name }}
+        </a-form-model-item>
+        <a-form-model-item ref="iosTeamId" :label="$t('createOemApp.label.teamId')" prop="iosTeamId">
+          <a-input v-model="form.iosTeamId"/>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </section>
 </template>
 <script>
-import { getThirdService,saveThirdService } from '@/api/optionalConfig'
+import { getThirdService,saveThirdService,editTeamId } from '@/api/optionalConfig'
 
 export default {
   props:{
     appId: {type: String, default:''},
     version: {type: String, default:''},
+    appData: { type: Object, default: ()=>{} },
   },
   data(){
     return {
@@ -63,6 +89,13 @@ export default {
       id:'',
       thirdData:[],
       serviceList:[],
+      teamIdVisible:false,
+      labelCol: { span: 6 },
+      wrapperCol: { span: 17 },
+      form:{},
+      rules:{
+        iosTeamId:{ required: true, message: this.$t('optionalConfig.ThirdPartyService.rule.teamId'), trigger: 'blur' },
+      }
     }
   },
   watch:{
@@ -77,6 +110,32 @@ export default {
     if(this.appId) this.getThirdService()
   },
   methods:{
+    checkboxChange(e,item){
+      if(this.appData.appDevType == 2 && item.code == 'wechat' && !this.appData.iosTeamId && e.target.checked){
+        this.$ConfirmModal(
+          this, 
+          this.$t('optionalConfig.ThirdPartyService.teamId.tips'), 
+          this.$t('public.warm.prompt'),
+          this.$t('optionalConfig.ThirdPartyService.config.now'),
+          this.$t('optionalConfig.ThirdPartyService.config.later')
+        ).then(async() => {
+          this.teamIdVisible = true
+          this.$refs.ruleForm.resetFields();
+        })
+      }
+      
+    },
+    sumitTeamId(){
+      this.$refs.ruleForm.validate(async valid => {
+        if (valid) {
+          const res = await editTeamId({appId: this.appId, iosTeamId: this.form.iosTeamId})
+          if(res.code!==0) return
+          this.teamIdVisible = false
+          this.$emit('updateAppData')
+        }
+      })
+      
+    },
     
     // 三方服务获取
     async getThirdService(){
@@ -188,7 +247,7 @@ export default {
 
 <style scoped lang="less">
 @import "../../../../global.less";
-@import "../../customizedApp/configuration/components/common.less";
+@import "../../OEMApp/configuration/interfaceConfig/common.less";
 .container{
   position: relative;
   height: 100%;

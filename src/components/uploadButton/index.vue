@@ -5,6 +5,7 @@
         <img :src="fileUrl" class="image"  @click=" $PreviewModal({ url: fileUrl})"/>
       </div>
       <a v-if="type=='file' && fileUrl" :href="fileUrl" class="file-name">{{ fileName }}</a>
+      <a class="download-text" v-if="download && fileUrl" @click="handleDownload">{{ $t('public.download') }}</a>
     </template>
     <div class="upload-wrap">
       <slot name="tips"></slot>
@@ -33,6 +34,7 @@
 import { beforeUpload } from "@/utils/validate"
 import { uploadFile } from "@/api/common"
 import { UploadBlueIcon } from "@/core/icons"
+import { getBase64 } from "@/utils/util"
 
 export default ({
   name:"UploadButton",
@@ -58,6 +60,8 @@ export default ({
     btnClass: { type: String, default: '' },            // 上传按钮的类名
     suffixValid: { type: Boolean, default: false },     // 是否通过文件名称判断类型
     showMsg: { type: Boolean, default: true },     // 是否显示上传成功的提示
+    isRequest: { type: Boolean, default: true },     // 是否上传接口
+    download: { type: Boolean, default: false },     // 是否下载
   },
   components:{
     UploadBlueIcon
@@ -84,15 +88,31 @@ export default ({
 
     // 图片上传
     async customRequest(fileData){
-      this.isLoading = true
-      const file = fileData.file
-      const res = await uploadFile(file,this.catalogName)
-      this.isLoading = false
-      if (res.code !== 0) return
-      this.$emit('uploaded',res.data)
-      if(this.showMsg){
-        this.$message.success(this.$t('public.upload.succeed'))
+      if(!this.isRequest){
+        const res = await getBase64(fileData.file)
+        this.$emit('uploaded',{file:fileData.file,url:res})
+      } else {
+        this.isLoading = true
+        const file = fileData.file
+        const res = await uploadFile(file,this.catalogName)
+        this.isLoading = false
+        if (res.code !== 0) return
+        this.$emit('uploaded',res.data)
+        if(this.showMsg){
+          this.$message.success(this.$t('public.upload.succeed'))
+        }
       }
+
+      
+    },
+
+    handleDownload(){
+      if(this.fileUrl){
+        this.$DownloadTemplate( this, { url:this.fileUrl }, this.fileName || '未知文件', "get" )
+      } else{
+        this.$emit('download')
+      }
+
       
     }
   }
@@ -142,5 +162,9 @@ export default ({
   }
   .ant-btn{
     padding: 0 20px;
+  }
+  .download-text{
+    margin-left: 20px;
+    color: @primary-color;
   }
 </style>

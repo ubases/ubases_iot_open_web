@@ -172,7 +172,8 @@ export default {
         //   { required: true, message: '请输入邮箱', trigger: 'blur' },
         // ],
       },
-      confirmLoading: false
+      confirmLoading: false,
+      
     }
   },
   mounted(){
@@ -217,7 +218,7 @@ export default {
 
     // 删除
     handleDelete(data){
-      this.$WarningModal(this, this.$t('public.confirm.delete')+`${data.id}?`).then(async () => {
+      this.$WarningModal(this, this.$t('public.confirm.delete')+`${data.name}?`).then(async () => {
         const res = await deleteCompanyContacts(data.id)
         this.toast(res)
         if(res.code!==0)return

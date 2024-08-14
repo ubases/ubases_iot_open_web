@@ -55,6 +55,10 @@
                 {{ $t("customizedApp.list.column.action.versionManage") }}
               </a-button>
               <a-divider type="vertical" />
+              <a-button type="link" size="small" @click="handleLinkProducts(record)">
+                {{ $t("oemApp.link.products") }}
+              </a-button>
+              <a-divider type="vertical"/>
               <a-button v-if="!record.iosVersion && !record.androidInterVersion && !record.androidOuterVersion" type="link" size="small" @click="deleteApp(record.id)">
                 {{$t("public.delete")}}
               </a-button>
@@ -69,17 +73,21 @@
             </template>
           </template>
         </a-table>
-        <!-- 创建APP弹窗 -->
+        <!-- 创建App弹窗 -->
       <creat-app :visible="creatAppVisible" @handleCancel="cancelApp" @handleOk="createdApp"></creat-app>
+      <link-products :visible="linkProductsVisible" :appKey="linkAppData.appKey" :appName="linkAppData.name" :allProductList="allProductList" @handleCancel="cancelLink" @handleOk="updateLink"></link-products>
     </a-page-header>
   </section>
 </template>
 <script>
 import { getAppList, deleteApp } from "@/api/appExploit";
+import { getProductList } from "@/api/product"
 import creatApp from './components/creatApp.vue'
+import LinkProducts from '../OEMApp/components/linkProducts.vue'
 export default {
   components: {
-    creatApp
+    creatApp,
+    LinkProducts
   },
   data(){
     return {
@@ -92,31 +100,37 @@ export default {
       },
       columns:[
         {
-          title: "APP",
+          title: "App",
           dataIndex: "app",
           scopedSlots: { customRender: "app" },
         },
         {
-          title: "APP KEY",
+          title: "App Key",
           dataIndex: "appKey",
+          width: "130px",
         },
         {
           title: this.$t('customizedApp.list.column.iosVersion'),
           dataIndex: "iosVersion",
           scopedSlots: { customRender: "iosVersion" },
-          width: "14%",
+          width: "120px",
         },
         {
           title: this.$t('customizedApp.list.column.androidVersion1'),
           dataIndex: "androidInterVersion",
           scopedSlots: { customRender: "androidInterVersion" },
-          width: "14%",
+          width: "120px",
         },
         {
           title: this.$t('customizedApp.list.column.androidVersion2'),
           dataIndex: "androidOuterVersion",
           scopedSlots: { customRender: "androidOuterVersion" },
-          width: "14%",
+          width: "120px",
+        },
+        {
+          title: this.$t('oemApp.link.products'),
+          dataIndex: "productListStr",
+          width: "15%",
         },
         {
           title: this.$t('oemApp.column.createdAt'),
@@ -132,29 +146,50 @@ export default {
           title: this.$t("public.action"),
           key: "action",
           align: "center",
-          width: "180px",
+          width: "260px",
           scopedSlots: { customRender: "action" },
         },
       ],
       dataSource: [],
       loading: false,
       creatAppVisible:false,
-      logoUrl:require('../../../assets/image/logo_default.png')
+      logoUrl:require('../../../assets/image/logo_default.png'),
+      allProductList:[],
+      linkProductsVisible:false,
+      linkAppData:{}
     }
   },
-  created () {
-    this.queryAppList()
+  async created () {
+    await this.queryAppList()
+    this.getProductList()
   },
   methods: {
-    //获取APP列表
+    //获取App列表
     async queryAppList() {
       const res = await getAppList({pageNum:this.pagination.current, pageSize:this.pagination.pageSize, appDevType:2})
       if (res.code !== 0) return
-      this.dataSource = res.data.list
+      this.dataSource = res.data.list?.map(item => {
+        return {
+          ...item,
+          productListStr: item.productList?.join('、') || ''
+        }
+      }) || []
       this.pagination.total = res.data.total
     },
+    
+    async getProductList() {
+      const res = await getProductList({})
+      if(res.code !== 0)return
+      this.allProductList = res.data?.list?.map(item=>{
+        return {
+          key:item.productKey,
+          id:item.id,
+          name:item.name
+        }
+      }) || []
+    },
 
-    // 删除APP
+    // 删除App
     deleteApp(id){
       this.$WarningModal(this, this.$t('oemApp.isDelete.app')).then(async() => {
         const res = await deleteApp({'appId':id})
@@ -163,7 +198,7 @@ export default {
       })
     },
 
-    //点击创建APP弹窗，弹起弹窗
+    //点击创建App弹窗，弹起弹窗
     handleAdd(){
       this.creatAppVisible = true
     },
@@ -179,7 +214,7 @@ export default {
       this.creatAppVisible = false
     },
 
-    // 创建APP完成
+    // 创建App完成
     createdApp(){
       this.creatAppVisible = false
       this.queryAppList()
@@ -192,6 +227,20 @@ export default {
     // 点击版本管理
     handleVersionManage(data){
       this.$router.push({path:"/appDevelop/customizedApp/versionManage/index",query:{appId:data.id}})
+    },
+
+    // 点击关联产品
+    handleLinkProducts(data){
+      this.linkAppData = data
+      this.linkProductsVisible = true
+    },
+
+    cancelLink(){
+      this.linkProductsVisible = false
+    },
+    updateLink(){
+      this.linkProductsVisible = false
+      this.queryAppList()
     }
 
   },

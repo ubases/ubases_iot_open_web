@@ -30,7 +30,7 @@ export default {
     }
 
     // 无黄色感叹号图标
-    Vue.prototype.$ConfirmModal = function (that, msg='', title = '',okText = that.$t('public.ok')) {
+    Vue.prototype.$ConfirmModal = function (that, msg='', title = '',okText = that.$t('public.ok'),cancelText=that.$t('public.cancel')) {
       return new Promise((resolve, reject) => {
         that.$confirm({
           width:'420',
@@ -38,9 +38,9 @@ export default {
           content: h=><div style="width:300px;text-align:center;color:#343A40;">{msg}</div>,
           icon: h=>'',
           centered:true,
-          okText: okText,
+          okText,
           okType: 'primary',
-          cancelText: that.$t('public.cancel'),
+          cancelText,
           class:'global-delete-modal',
           onOk: () => {
             resolve()

@@ -114,7 +114,7 @@
           <a-button
             type="link"
             size="small"
-            @click="$router.push({ path:'/product/device/details/index', query:{did:record.did} })"
+            @click="goDetail(record,1)"
           >
             {{$t('public.detail.text')}}
           </a-button>
@@ -122,7 +122,7 @@
           <a-button
             type="link"
             size="small"
-            @click="$router.push({ path:'/product/device/log/index', query:{did:record.did, name:record.deviceName, productId: record.productId} })"
+            @click="goDetail(record,2)"
           >
             {{$t('device.button.log')}}
           </a-button>
@@ -130,7 +130,7 @@
           <a-button
             type="link"
             size="small"
-            @click="$router.push({ path:'/product/device/malfunction/index', query:{did:record.did, name:record.deviceName} })"
+            @click="goDetail(record,3)"
           >
             {{$t('device.btn.malfunction')}}
           </a-button>
@@ -218,24 +218,15 @@ export default {
     ExportGreenIcon,
   },
   created() {
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.queryList()
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'queryParam', query.queryParam )
+      }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/product/device/details/index' || from.path === '/product/device/log/index' || from.path === '/product/device/malfunction/index' || from.path === '/dashboard/index'
-    next()
+    this.queryList()
   },
 
-  activated () {
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.queryList()
-    }
-  },
   methods: {
     // 设备数据列表
     async queryList() {
@@ -294,7 +285,21 @@ export default {
       this.exportVisible = !this.exportVisible
     },
 
+    goDetail(record,tab){
+      this.$router.push({ path:'/product/device/details/index', query:{did:record.did, name:record.deviceName, productId: record.productId,tab} })
+    }
+
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/product/device/details/index'
+    next()
+  },
+  
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

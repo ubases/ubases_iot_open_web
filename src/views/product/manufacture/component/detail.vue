@@ -38,7 +38,7 @@
         {{data.exportCount}}
       </a-form-model-item>
       <a-form-model-item :label="$t('manufacture.detail.exportTime')" v-for="(item,index) in data.exportList || []" :key="index">
-        {{ item.time }}
+        {{ item }}
       </a-form-model-item>
     </a-form-model>
     <section slot="footer" class="ant-modal-footer">

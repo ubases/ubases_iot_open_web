@@ -4,10 +4,8 @@
     :width="680"
     :visible="visible"
     :confirm-loading="confirmLoading"
-    :okText="okText"
-    :cancelText="cancelText"
-    @ok="handleOk"
     @cancel="handleCancel"
+    :footer="null"
   >
     <a-spin :spinning="confirmLoading">
       <section class="steps-wrap flex x-axis-center">
@@ -16,9 +14,12 @@
           <a-step :title="$t('addFirmware.upload.version')"/>
         </a-steps>
       </section>
-      <a-form-model v-show="stepIndex == 0" ref="ruleForm" class="regular-form" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 15 }">
-        <a-form-model-item :label="$t('addFirmware.label.name')" prop="name" >
+      <a-form-model v-show="stepIndex == 0" ref="ruleForm" class="regular-form" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 15 }">
+        <a-form-model-item :label="$t('firmware.inputName.zh')" prop="name" >
           <a-input v-model="form.name"/>
+        </a-form-model-item>
+        <a-form-model-item :label="$t('firmware.inputName.en')" prop="nameEn" >
+          <a-input v-model="form.nameEn"/>
         </a-form-model-item>
         <a-form-model-item :label="$t('addFirmware.label.flag')" prop="flag" >
           <a-input v-model="form.flag"/>
@@ -85,6 +86,12 @@
           <a-radio-group v-model="form.isMust" :options="$DictList('yes_no')" />
         </a-form-model-item>
       </a-form-model>
+        <section class="footer">
+          <a-button class="cancel-btn" type="info" @click="handleCancel">{{cancelText}}</a-button>
+          <a-button class="confirm-btn" type="primary" @click="handleOk">{{okText}}</a-button>
+          <a-button v-show="stepIndex == 0" class="firmware-key-btn" type="info" @click="generateKey">{{ $t('firmware.generate.firmware.key') }}</a-button>
+        </section>
+
     </a-spin>
   </a-modal>
 </template>
@@ -108,7 +115,8 @@ export default ({
       confirmLoading:false,
       form:{},
       rules: {
-        name: CommonNameRules(this.$t("firmware.inputName")),
+        name: CommonNameRules(this.$t("firmware.inputName.valid.zh")),
+        nameEn: CommonNameRules(this.$t("firmware.inputName.valid.en")),
         flag: CommonNameRules(this.$t("firmware.inputFlag")),
         type: [{ required: true, message: this.$t("firmware.inputType"), trigger: 'change' }],
         flashSize: [{required: true,message: this.$t("firmware.inputFlashSize"),trigger: 'change',}],
@@ -122,7 +130,7 @@ export default ({
         upgradeFilePath: [{ required: true, message: this.$t("firmware.upgradeFirmware.valid"), trigger: 'change' }],
         isMust: [{ required: true, message: this.$t("firmware.keyVersion.valid"), trigger: 'change' }],
       },
-      okText: this.$t('public.nextstep'),
+      okText: this.$t('firmware.version.label.upload'),
       cancelText: this.$t('public.cancel'),
     }
   },
@@ -133,11 +141,18 @@ export default ({
     // 按钮文字
     stepIndex (val) {
       if(val == 0){
-        this.okText  = this.$t('public.nextstep'),
+        this.okText  = this.$t('firmware.version.label.upload'),
         this.cancelText = this.$t('public.cancel')
       } else {
         this.okText= this.$t('public.submit'),
         this.cancelText= this.$t('public.upstep')
+      }
+    },
+    visible(val){
+      if(val){
+        this.$refs.ruleForm?.resetFields();
+        this.$refs.versionForm?.resetFields();
+        this.form = {}
       }
     }
   },
@@ -175,6 +190,19 @@ export default ({
           this.$emit("sumitEdit")
         });
       }
+    },
+    generateKey(){
+      this.$refs.ruleForm.validate(async(valid) => {
+          if (!valid) return
+          this.confirmLoading = true;
+          const param = {...this.form}
+          if(this.productId) param['productId'] = this.productId
+          const resVersion = await addFirmware(param)
+          this.confirmLoading = false;
+          if(resVersion.code !== 0 ) return
+          this.form = {}
+          this.$emit("sumitEdit")
+        });
     },
     handleCancel() {
       if(this.stepIndex == 0) {
@@ -229,5 +257,36 @@ export default ({
 /deep/.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon{
   color: #fff;
 }
+/deep/.ant-form{
+  padding: 0 30px;
+}
+/deep/.ant-modal-body{
+  padding: 0;
+}
+.footer{
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    border: 0;
+    background: @aithings-search-bg-color;
+    .ant-btn{
+      padding: 0 28px;
+      border: 1px solid @aithings-text-tips-color;
+      color: @aithings-text-tips-color;
+    }
+    .ant-btn+.ant-btn{
+      margin-left: 20px;
+    }
+    .ant-btn-primary{
+      background: @primary-color;
+      border: 1px solid @primary-color;
+      color: #fff;
+      &:disabled{
+        color: rgba(0,0,0,.25);
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+      }
+    }
 
+  }
 </style>

@@ -142,26 +142,16 @@ export default {
     };
   },
   created() {
-    if (!this.$route.meta.isBack) {
-      // 初始化data的值
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.queryList()
-      this.getAppList()
-    } 
-  },
-  beforeRouteEnter (to, from, next) {
-    // 上次路由，设置isBack为 true 还是 false
-    to.meta.isBack = from.path === '/dataManage/appUsers/userDetails/index' || from.path === '/dashboard/index'
-    next()
+    if (this.$route.meta.isBack) {
+      const query = getPageQuery(this.$route)
+      if(query){
+        this.$set(this,'queryParam', query.queryParam)
+      }
+    }
+    this.queryList()
+    this.getAppList()
   },
 
-  activated () {
-    // keep-alive activated钩子
-    if (this.$route.meta.isBack) {
-      this.$route.meta.isBack = false // 重置isBack
-      this.queryList()
-    }
-  },
   methods: {
     onChangePagination(e) {
       this.pagination.current = e.current
@@ -210,6 +200,15 @@ export default {
       this.$router.push({path:"/dataManage/appUsers/userDetails/index",query:{userInfo : JSON.stringify({appName, userAccount, userId})}})
     }
   },
+
+  beforeRouteEnter (to, from, next) {
+    to.meta.isBack = from.path === '/dataManage/appUsers/userDetails/index'
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    Storage.set("pageQuery", {[from.name]:{queryParam:this.queryParam}})
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

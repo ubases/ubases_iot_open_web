@@ -24,7 +24,7 @@
         </a-button>
       </template>
     </a-table>
-    <!-- 添加APP测试账号 -->
+    <!-- 添加App测试账号 -->
     <a-modal
       :title="$t('setting.test.service.add.app.test.account')"
       :visible="visible"
@@ -62,7 +62,7 @@ export default {
       columns:[
         {
           dataIndex: "appName",
-          title: 'APP',
+          title: 'App',
         },
         {
           dataIndex: "account",

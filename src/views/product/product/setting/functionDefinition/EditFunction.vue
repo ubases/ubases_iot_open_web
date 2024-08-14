@@ -22,7 +22,7 @@
           <span v-if="form.custom == 0"> {{form.identifier}}</span>
         </a-form-model-item>
         <a-form-model-item :label="$t('setting.edit.function.label.dataType')" prop="dataType">
-          <a-radio-group  v-if="form.custom != 0" v-model="form.dataType" @change="dataTypeChange" :options="$DictList('data_type')" />
+          <a-radio-group v-if="form.custom != 0" v-model="form.dataType" @change="dataTypeChange" :options="$DictList('data_type')" />
           <span v-if="form.custom == 0">
             {{$DictName('data_type',form.dataType)}}
           </span>
@@ -48,8 +48,8 @@
         <!-- /数值型 -->
 
         <!-- 枚举型 -->
-        <template v-if="dataType == 'ENUM'">
-          <a-form-model-item :label="$t('setting.edit.function.label.enum')" prop="enum" >
+        <template v-if="dataType == 'ENUM' || dataType == 'FAULT'">
+          <a-form-model-item :label="dataType == 'ENUM' ?$t('setting.edit.function.label.enum'): $t('setting.edit.function.label.fault')" prop="enum" >
             <div>
               <div class="flex y-axis-center" v-for="(item,index) in form.enum" :key="index">
                 <a-row :gutter="10" type="flex">
@@ -102,12 +102,13 @@
         <!-- /字符型 -->
 
         <a-form-model-item :label="$t('setting.edit.function.data.transfer.type')" prop="rwFlag">
-          <a-radio-group v-if="form.custom != 0" v-model="form.rwFlag" :options="$DictList('data_transfer_type')" />
+          <a-radio-group v-if="form.custom != 0 && dataType != 'FAULT'" v-model="form.rwFlag" :options="$DictList('data_transfer_type')" />
+          <a-radio-group v-if="form.custom != 0 && dataType == 'FAULT'" v-model="form.rwFlag" :options="$DictList('data_transfer_type').filter(item=>item.value=='READ')" />
           <template v-if="form.custom == 0">
             {{$DictName('data_transfer_type',form.rwFlag)}}
           </template>
         </a-form-model-item>
-        <a-form-model-item v-if="dataType" :label="$t('setting.edit.function.label.default')" prop="defaultVal" >
+        <a-form-model-item v-if="dataType && dataType != 'FAULT'" :label="$t('setting.edit.function.label.default')" prop="defaultVal" >
           <a-input 
           v-if="dataType == 'TEXT'" 
           v-model="form.defaultVal" 
@@ -197,6 +198,7 @@ export default ({
     visible(val){
       if(!val) return
       this.form = this.$deepClone(this.data)
+      console.log(this.form )
       this.dataType = this.form.dataType
       this.setParams()
     }
@@ -259,7 +261,7 @@ export default ({
         params.dataSpecs = JSON.stringify({"custom":form.custom, "dataType":form.dataType, min: form.min, max: form.max, step: form.step, multiple: form.multiple, unit:`${form.unit||''}`})
       } else if(form.dataType == "DOUBLE" || form.dataType=='FLOAT'){
         params.dataSpecs = JSON.stringify({"custom":form.custom, "dataType":form.dataType, min: form.min, max: form.max, step: form.step, multiple: form.multiple, unit:`${form.unit||''}`})
-      } else if( form.dataType == "ENUM"){
+      } else if( form.dataType == "ENUM" || form.dataType == 'FAULT'){
         const list= form.enum.map((item,index) => {
           return {"custom":form.custom, "dataType":form.dataType, value:item.value, name:item.name, desc:item.desc, sort:index}
         })
@@ -278,12 +280,12 @@ export default ({
     setParams(){
       if(( this.form.dataType == "INT" ||  this.form.dataType == "DOUBLE" || this.form.dataType=='FLOAT') && this.form.dataSpecs){
         const dataSpecs = JSON.parse(this.form.dataSpecs)
-        this.form.min = Number(dataSpecs.min)
-        this.form.max = Number(dataSpecs.max) 
-        this.form.step = Number(dataSpecs.step || 1)
-        this.form.multiple = Number(dataSpecs.multiple || 1)
-        this.form.unit = dataSpecs.unit || ''
-      } else if( this.form.dataType == "ENUM"){
+        this.$set(this.form,'min',Number(dataSpecs.min))
+        this.$set(this.form,'max',Number(dataSpecs.max))
+        this.$set(this.form,'step',Number(dataSpecs.step || 1))
+        this.$set(this.form,'multiple',Number(dataSpecs.multiple || 1))
+        this.$set(this.form,'unit',dataSpecs.unit || '')
+      } else if( this.form.dataType == "ENUM" || this.form.dataType == 'FAULT'){
         if(this.form.dataSpecsList){
           const list = JSON.parse(this.form.dataSpecsList)
           this.$set(this.form,'enum', this.$deepClone(list))
@@ -292,7 +294,7 @@ export default ({
         }
       } else if(this.form.dataType == "BOOL"){
         if(this.form.dataSpecsList){
-          this.form.bool = JSON.parse(this.form.dataSpecsList)
+          this.$set(this.form,'bool',JSON.parse(this.form.dataSpecsList))
         }
       }
     },
@@ -315,7 +317,11 @@ export default ({
       this.$set(this.form,'defaultVal','')
       switch (this.dataType) {
         case "ENUM":
-          this.form['enum'] = this.form?.enum || [];
+          this.$set(this.form,'enum', this.form?.enum || [])
+          break;
+        case "FAULT":
+          this.$set(this.form,'enum', this.form?.enum || [])
+          this.$set(this.form,'rwFlag','READ')
           break;
       }
     },

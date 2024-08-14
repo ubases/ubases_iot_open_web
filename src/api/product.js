@@ -326,6 +326,20 @@ export function getTranslateFuncList(params) {
 
 
 /**
+ * 面板更新-取消提醒
+ * @param {*} data 参数
+ * @returns
+ */
+export function cancelReminderPanel(data) {
+  return request({
+    url: "/v1/platform/web/open/product/cancelReminder",
+    method: "post",
+    data
+  });
+}
+
+
+/**
  * 查询配网引导详情
  * @param {*} params 参数
  * @returns
@@ -685,5 +699,27 @@ export function deleteTestAccount(id) {
   return request({
     url: `/v1/platform/web/open/productTestAccount/delete/${id}`,
     method: "post",
+  });
+}
+
+/**
+ * 产品读取已绑定的APP列表
+ */
+export function getBindedApp(params) {
+  return request({
+    url: "/v1/platform/web/open/product/bindAppList",
+    method: "get",
+    params,
+  });
+}
+
+/**
+ * 产品绑定的APP提交
+ */
+export function handleBindApp(data) {
+  return request({
+    url: "/v1/platform/web/open/product/productBindApp",
+    method: "post",
+    data,
   });
 }

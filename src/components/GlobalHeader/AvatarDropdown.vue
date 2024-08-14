@@ -43,13 +43,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(["userInfo","tenantList","defaultSpace"]),
   },
   async mounted(){
 
   },
   methods: {
-
     handleToSettings() {
       this.$router.push({ path: "/account" });
     },
@@ -63,6 +62,7 @@ export default {
         })
       })
     },
+
 
   },
 };

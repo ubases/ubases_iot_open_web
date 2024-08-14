@@ -4,26 +4,24 @@
       <icon-font slot="backIcon" type="icon-back_arrow" :style="{ fontSize: '24px' }"/>
       <section class="content">
         <div class="user-info">
-          {{userInfo.appName}}  APP  
+          {{userInfo.appName}}  App  
           <a-divider type="vertical" />
           {{$t('user.detail.user.account')}} {{userInfo.userAccount}} {{$t('user.detail.user.now')}}{{userInfo.total}}{{$t('user.detail.device.number')}}
         </div>
         <a-table
           size="small"
-          rowKey="devicePid"
+          rowKey="deviceId"
           :data-source="dataSource"
           :columns="columns"
           :loading="loading"
           :pagination="pagination"
           @change="onChangePagination"
         >
-          <template  slot="addMethod" slot-scope="text, record">
-            {{$DictName('user_device_add_method',record.addMethod)}}
+          <template slot="deviceName" slot-scope="text, record">
+            <span class="device-name" @click="handleDetail(record)">{{record.deviceName}}</span>
           </template>
-          <template v-slot:action="item">
-            <a-button type="link" size="small" @click="handleDetails(item.id)">
-              {{ $t("public.check.details") }}
-            </a-button>
+          <template slot="addMethod" slot-scope="text, record">
+            {{$DictName('user_device_add_method',record.addMethod)}}
           </template>
         </a-table>
       </section>
@@ -56,9 +54,10 @@ export default ({
         {
           dataIndex: "deviceName",
           title: this.$t('user.detail.colunm.deviceName'),
+          scopedSlots: { customRender: "deviceName" },
         },
         {
-          dataIndex: "devicePid",
+          dataIndex: "deviceId",
           title: this.$t('user.detail.colunm.devicePid'),
         },
         {
@@ -103,6 +102,9 @@ export default ({
       this.dataSource = res.data.list
       this.pagination.total = res.data.total
       this.userInfo.total = res.data.total
+    },
+    handleDetail(data){
+      this.$router.push({ path:'/product/device/details/index', query:{ did:data.deviceId, name:data.deviceName, productId:data.productId } })
     }
 
   }
@@ -121,5 +123,10 @@ export default ({
   }
   .user-info{
     padding-bottom: 20px;
+  }
+  .device-name{
+    color: @primary-color;
+    text-decoration: underline;
+    cursor: pointer;
   }
 </style>

@@ -9,7 +9,6 @@
   >
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="ruleForm" :model="form" :rules="rules"  :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }">
-        <p class="warning-text">{{$t('device.generate.triple.warning.text')}}</p>
         <a-form-model-item :label="$t('device.generate.triple.label.number')" prop="number">
           <a-input-number v-model="form.number" :precision="0" :min="1" :placeholder="$t('device.generate.triple.placeholder')"/>
         </a-form-model-item>

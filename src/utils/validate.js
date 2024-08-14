@@ -416,7 +416,7 @@ export const beforeUpload = (that,file,size,width,height,ratio) =>{
         }
         if(ratio){
           const arr = ratio.split(":")
-          if (w/h !== arr[0]/arr[1]) {
+          if (parseInt(w/h) !== parseInt(arr[0]/arr[1])) {
             that.$message.warning(that.$t('public.upload.ratio',{ratio}));
             return reject(false) // //如有问题,通过reject 函数传一个false阻止他的上传
           } else {

@@ -79,6 +79,19 @@ export function editLaunchMarkets(data) {
 }
 
 /**
+ * 更改提醒方式
+ */
+export function setRemindMode(data) {
+  return request({
+    url: "/v1/platform/web/open/oem/app/custom/version/editRemindMode",
+    method: "post",
+    data,
+  });
+}
+
+
+
+/**
  * 更新描述
  */
 export function editRemark(data) {

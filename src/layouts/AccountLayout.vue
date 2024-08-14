@@ -3,7 +3,6 @@
     <a-layout-header class="header">
       <div class="logo" >
         <span @click="backIndex" class="tap-pointer">
-          <!-- <logo-white-icon style="transform: translateY(10px); margin-right: 17px;"></logo-white-icon> -->
           <img src="../assets/logo_white.png" class="logo-img"/>
           <span>{{$t('system.title')}}</span>
           <version/>

@@ -25,7 +25,8 @@
             <img :src="item.previewUrl || require('../../../../assets/image/default-bg.png')" class="panel-img"/>
           </section>
           <h5 class="panel-name">{{ item.name }}</h5>
-          <div class="btn" @click="selectPanel(item)">{{$t('setting.panels.select.this.model')}}</div>
+          <div v-if="item.id ==selectedId" class="used">{{$t('setting.panels.using')}}</div>
+          <div v-else class="btn" @click="selectPanel(item)">{{$t('setting.panels.select.this.model')}}</div>
         </div>
       </div>
     </div>
@@ -45,7 +46,7 @@
       return {
         panelTypeList:[
           { name:this.$t('setting.panels.type.public.name'), desc:this.$t('setting.panels.type.public.desc'), type:1 },
-          // { name:this.$t('setting.panels.type.custom.name'), desc:this.$t('setting.panels.type.custom.desc'), type:2 },
+          { name:this.$t('setting.panels.offline'), desc:this.$t('setting.panels.offline.info'), type:3 },
         ],
         currentType: 1,
       }
@@ -81,11 +82,13 @@
         this.$emit('selectPanel',panel)
       },
       // 创建面板
-      // handleCreate(){
-        // if(this.currentType==2){
-        //   this.$router.push({path:'/panel/studioPanel/index.vue'})
-        // }
-      // }
+      handleCreate(){
+        if(this.currentType==2){
+          this.$router.push({path:'/panel/studioPanel/index.vue'})
+        } else if(this.currentType==3){
+          this.$router.push({path:'/panel/offlinePanel/index'})
+        }
+      }
     }
   })
 
@@ -97,6 +100,10 @@
   width: 100%;
   height: 100%;
 }
+.used{
+    color: @primary-color;
+    text-align: center;
+  }
 .left-side{
   width: 176px;
   padding-right: 11px;

@@ -38,7 +38,7 @@ export default {
   "device.detail.label.did": "设备ID",
   "device.detail.label.id": "生产UUID",
   "device.detail.label.productName": "所属产品",
-  "device.detail.label.productKey": "产品key",
+  "device.detail.label.productKey": "产品ID",
   "device.detail.label.firmwallKey": "模组固件key",
   "device.detail.label.firmwallVersion": "模组固件版本",
   "device.detail.label.mcuFirmwallKey": "MCU固件key",
@@ -52,7 +52,7 @@ export default {
   "device.detail.label.updateTime": "更新时间",
   "device.detail.label.onlineStatus": "当前在线",
   "device.detail.label.activeUser": "绑定用户",
-  "device.detail.label.activeApp": "绑定APP",
+  "device.detail.label.activeApp": "绑定App",
   "device.detail.label.activeLoc": "地理位置",
   "device.detail.label.activeChannel": "渠道",
   "device.detail.label.activeTimeZone": "时区",
@@ -76,7 +76,6 @@ export default {
   "device.export.triple.placeholder.activeStatus": "是否激活",
   "device.export.triple.fileName":"三元组",
   "device.generate.triple.title":"导入三元组",
-  "device.generate.triple.warning.text": "请导入你计划生产的数量和三元组，你也可以定义三元组的批次",
   "device.generate.triple.label.number": "数量",
   "device.generate.triple.label.fileName": "序列号",
   "device.generate.triple.label.productId": "选择产品",
@@ -103,5 +102,6 @@ export default {
   "device.malfunction.columns.desc": "描述",
   "device.malfunction.columns.from": "上报端",
   "device.malfunction.columns.type": "上报方式",
-  "device.malfunction.columns.parameter": "故障参数"
+  "device.malfunction.columns.parameter": "故障参数",
+  "device.version.info":"固件版本信息",
 }

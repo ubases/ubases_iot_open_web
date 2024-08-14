@@ -20,6 +20,9 @@
               <a-form-model-item :label="$t('firmware.details.label.name')" prop="name" >
                 <a-input v-model="editForm.name" :maxLength="50"/>
               </a-form-model-item>
+              <a-form-model-item :label="$t('firmware.details.label.nameEn')" prop="nameEn" >
+                <a-input v-model="editForm.nameEn" :maxLength="50"/>
+              </a-form-model-item>
               <a-form-model-item :label="$t('firmware.details.label.id')" prop="id" >
                 {{editForm.id}}
               </a-form-model-item>
@@ -66,10 +69,11 @@
             <a-table
               size="small"
               rowKey="id"
-              :pagination="false"
               :data-source="dataSource"
               :columns="columns"
               :loading="loading"
+              :pagination="pagination"
+              @change="onChangePagination"
             >
             <template slot="status" slot-scope="text, record">
               {{$DictName('version_status',record.status)}}
@@ -85,6 +89,10 @@
             </template>
             
               <template v-slot:action="record">
+                <a-button v-if="record.upgradeFilePath || record.prodFilePath" type="link"  size="small"  @click="handleDownload(record)"  >
+                  {{ $t("public.download") }}
+                </a-button>
+                 <a-divider v-if="record.status != 1" type="vertical" />
                 <a-button v-if="record.status != 1" type="link"  size="small"  @click="handlePublish(record)"  >
                   {{ $t("firmware.putaway") }}
                 </a-button>
@@ -127,7 +135,8 @@ export default {
       firmwareData:{},
       editForm:{},
       basicMsg:[
-        {label:this.$t('firmware.firmwareName'), value:'name'},
+        {label:this.$t('firmware.details.label.name'), value:'name'},
+        {label:this.$t('firmware.details.label.nameEn'), value:'nameEn'},
         {label:this.$t('firmware.key'), value:'id'},
         {label:this.$t('firmware.flag'), value:'flag'},
         {label:this.$t('firmware.type'), value:'type',filter:"firmware_type"},
@@ -188,17 +197,25 @@ export default {
           title: this.$t("public.action"),
           key: "action",
           align: "left",
-          width: "200px",
+          width: "260px",
           scopedSlots: { customRender: "action" },
         },
       ],
       rules: {
-        name: CommonNameRules(this.$t("firmware.inputName")),
+        name: CommonNameRules(this.$t("firmware.inputName.valid.zh")),
+        nameEn:CommonNameRules(this.$t("firmware.inputName.valid.en")),
         flag: CommonNameRules(this.$t("firmware.inputFlag")),
         type: [{ required: true, message: this.$t("firmware.inputType"), trigger: 'change' }],
         flashSize: [{required: true,message: this.$t("firmware.inputFlashSize"),trigger: 'change',}],
         upgradeOvertime: [{ required: true, message: this.$t("firmware.inputUpgradeTime"), trigger: 'blur' }],
         remark:[ { max:500, message: this.$t('firmware.version.rule.versionDesc'), trigger: 'blur' },]
+      },
+      pagination: {
+        showSizeChanger: true,
+        current: 1,
+        pageSize: 10,
+        total: 0,
+        showTotal: (total, range) => this.$t('public.pagination.total')+`:${total}` + this.$t('public.pagination.current') +`:${range[0]}-${range[1]}`,
       },
     };
   },
@@ -211,6 +228,11 @@ export default {
     this.getFirmwareVersionList()
   },
   methods: {
+    onChangePagination(e) {
+      this.pagination.current = e.current
+      this.pagination.pageSize = e.pageSize
+      this.getFirmwareVersionList()
+    },
     // 获取固件详情
     async getFirmwareDetails() {
       const res = await getFirmwareDetail(this.id)
@@ -221,9 +243,10 @@ export default {
 
     // 获取固件版本列表
     async getFirmwareVersionList(){
-      const res = await getFirmwareVersionList({query: {firmwareId:this.id}})
+      const res = await getFirmwareVersionList({page:this.pagination.current, limit:this.pagination.pageSize, query: {firmwareId:this.id}})
        if(res.code !==0) return
        this.dataSource = res.data.list
+       this.pagination.total = res.data.total
     },
 
     // 点击修改固件基础信息
@@ -298,6 +321,15 @@ export default {
         if(res.code !== 0) return
         this.getFirmwareVersionList()
       })
+    },
+
+    handleDownload(data){
+      if(data.upgradeFilePath){
+        this.$DownloadTemplate( this, {url: data.upgradeFilePath}, data.upgradeFileName, "get");
+      }
+      if(data.prodFilePath){
+        this.$DownloadTemplate( this, {url: data.prodFilePath}, data.prodFileName, "get");
+      }
     },
 
     // 返回

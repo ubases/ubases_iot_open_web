@@ -39,7 +39,9 @@ export default {
     // 选中空间
     async selectSpace(tenantId){
       if(tenantId == this.defaultSpace.tenantId) {
-        this.$router.replace({path:"/dashboard/index"})
+        if(this.$route.path != '/dashboard/index' ){
+          this.$router.replace({path:"/dashboard/index"})
+        }
         return
       }
       await this.$store.dispatch("ChangeSpace",tenantId)

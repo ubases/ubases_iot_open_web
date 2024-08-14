@@ -1,6 +1,6 @@
 <template>
   <section class="page-wrap no-padding">
-    <a-page-header :title="$t('release.log.title')" @back="back()">
+    <a-page-header :title="$t('release.log.title')" @back="$router.back()">
       <icon-font slot="backIcon" type="icon-back_arrow" :style="{ fontSize: '24px' }"/>
       <section class="content">
         <a-table
@@ -122,10 +122,6 @@ export default ({
       this.detailVisible = false
     },
 
-    // 返回上一页
-    back(){
-      this.$router.replace({name:'firmwareOTA', params:{productId: this.productId }})
-    }
   }
 })
 </script>

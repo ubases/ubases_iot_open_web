@@ -2,7 +2,7 @@ export default {
   "manufacture.title": "生产管理",
   "manufacture.placeholder.searchKey": "请输入设备名称",
   "manufacture.placeholder.batchId": "请输入批次",
-  "manufacture.placeholder.exportTimes": "导出次数",
+  "manufacture.placeholder.exportTimes": "导出状态",
   "manufacture.placeholder.isActive": "是否激活",
   "manufacture.placeholder.createTime":"创建时间",
   "manufacture.button.addTriple": "导入三元组",
