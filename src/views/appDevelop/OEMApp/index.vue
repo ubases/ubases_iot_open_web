@@ -1,7 +1,7 @@
 <template>
   <section class="page-wrap">
     <a-page-header :title="$t('oemApp.list.subtitle')">
-      <div class="table-msg">{{$t('oemApp.list.description')}}<a href="javascript:;" class="help-doc">{{ $t('public.check.doc') }}</a></div>
+      <div class="table-msg">{{$t('oemApp.list.description')}}<a href="https://doc.iot-aithings.com/APP%E5%BC%80%E5%8F%91/App%E4%BA%91%E6%89%93%E5%8C%85%E6%9C%8D%E5%8A%A1" target="_blank" class="help-doc">{{ $t('public.check.doc') }}</a></div>
         <!-- 表格操作栏 -->
         <div class="table-operator">
           <a-button type="primary" @click="handleAdd({},'add')" class="grean-button">
